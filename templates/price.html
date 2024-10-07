@@ -1,0 +1,461 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="app-main flex-column flex-row-fluid " id="kt_app_main">
+    <!--begin::Content wrapper-->
+    <div class="d-flex flex-column flex-column-fluid">
+                                
+<!--begin::Toolbar-->
+<div id="kt_app_toolbar" class="app-toolbar  py-3 py-lg-6 ">
+
+<!--begin::Toolbar container-->
+<div id="kt_app_toolbar_container" class="app-container  container-xxl d-flex flex-stack ">
+
+
+
+<!--begin::Page title-->
+<div class="page-title d-flex flex-column justify-content-center flex-wrap me-3 ">
+<!--begin::Title-->
+<h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">
+Pricing
+</h1>
+<!--end::Title-->
+
+
+<!--begin::Breadcrumb-->
+<ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                <!--begin::Item-->
+                        <li class="breadcrumb-item text-muted">
+                                        <a href="/keen/demo1/index.html" class="text-muted text-hover-primary">
+                    Home                            </a>
+                                </li>
+                    <!--end::Item-->
+                        <!--begin::Item-->
+        <li class="breadcrumb-item">
+            <span class="bullet bg-gray-500 w-5px h-2px"></span>
+        </li>
+        <!--end::Item-->
+                            
+                <!--begin::Item-->
+                        <li class="breadcrumb-item text-muted">
+                                        Corporate                                            </li>
+                    <!--end::Item-->
+                            
+        </ul>
+<!--end::Breadcrumb-->
+</div>
+<!--end::Page title-->
+<!--begin::Actions-->
+<div class="d-flex align-items-center gap-2 gap-lg-3">
+<!--begin::Filter menu-->
+<div class="d-flex">
+<select name="campaign-type" data-control="select2" data-hide-search="true" class="form-select form-select-sm bg-body border-body w-175px select2-hidden-accessible" data-select2-id="select2-data-7-irro" tabindex="-1" aria-hidden="true" data-kt-initialized="1">
+    <option value="Twitter" selected="selected" data-select2-id="select2-data-9-hs9a">Select Campaign</option>
+    <option value="Twitter">Twitter Campaign</option>
+    <option value="Twitter">Facebook Campaign</option>
+    <option value="Twitter">Adword Campaign</option>
+    <option value="Twitter">Carbon Campaign</option>
+</select><span class="select2 select2-container select2-container--bootstrap5" dir="ltr" data-select2-id="select2-data-8-o5z1" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single form-select form-select-sm bg-body border-body w-175px" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-campaign-type-7c-container" aria-controls="select2-campaign-type-7c-container"><span class="select2-selection__rendered" id="select2-campaign-type-7c-container" role="textbox" aria-readonly="true" title="Select Campaign">Select Campaign</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+
+<a href="#" class="btn btn-icon btn-sm btn-success flex-shrink-0 ms-4" data-bs-toggle="modal" data-bs-target="#kt_modal_create_campaign">
+    <i class="ki-duotone ki-plus fs-2"></i> 
+</a>
+</div>
+<!--end::Filter menu-->
+
+
+<!--begin::Secondary button-->
+<!--end::Secondary button-->
+
+<!--begin::Primary button-->
+<!--end::Primary button-->
+</div>
+<!--end::Actions-->
+</div>
+<!--end::Toolbar container-->
+</div>
+<!--end::Toolbar-->                                        
+        
+<!--begin::Content-->
+<div id="kt_app_content" class="app-content  flex-column-fluid ">
+
+
+<!--begin::Content container-->
+<div id="kt_app_content_container" class="app-container  container-xxl ">
+
+<!--begin::Pricing-->
+<div class="card">
+<!--begin::Card body-->
+<div class="card-body px-10 px-lg-20 pt-17 pb-10">    
+<!--begin::Table container-->
+<div class="table-responsive">
+<!--begin::Table-->
+<table class="table align-middle table-striped gy-7">
+    <!--begin::Table head-->
+    <thead class="align-middle">
+        <tr id="kt_pricing">
+            <th>
+                <!--begin::Nav group-->                            
+                <div class="nav bg-light rounded-pill px-3 py-2 ms-9 mb-15 w-225px" data-kt-buttons="true" data-kt-initialized="1">
+                    <!--begin::Nav link-->
+                    <button class="nav-link active btn btn-active btn-active-dark fw-bold btn-color-gray-600 active py-3 px-5 m-1 rounded-pill" data-kt-plan="month">
+                        Monthly
+                    </button>
+                    <!--end::Nav link-->
+
+                    <!--begin::Nav link-->
+                    <button class="nav-link  btn btn-active btn-active-dark fw-bold btn-color-gray-600 py-3 px-5 m-1 rounded-pill" data-kt-plan="annual">
+                        Annually
+                    </button>
+                    <!--end::Nav link-->
+                </div>  
+                <!--end::Nav group-->                              
+            </th>
+
+            <th class="text-center min-w-200px">
+                <div class="min-w-200px mb-15">   
+                    <div class="text-primary fs-3 fw-bold mb-7">Free</div>
+
+                    <div class="fs-5x fw-semibold d-flex justify-content-center align-items-start lh-sm">
+                        <span class="align-self-start fs-2 mt-3">$</span>
+                        0
+                    </div>
+
+                    <div class="text-muted fw-bold mb-7">Monthly</div>
+
+                    <a href="#" class="btn btn-light-primary fw-bold mx-auto">Start</a>                                
+                </div>
+            </th>
+
+            <th class="text-center min-w-200px">
+                <div class="min-w-200px bg-primary card-rounded py-12 mb-15">                               
+                    <div class="text-white fs-3 fw-bold mb-7">Pro</div>
+
+                    <div class="fs-5x text-white d-flex justify-content-center align-items-start">
+                        <span class="fs-2 mt-3">$</span>
+                        
+                        <span class="lh-sm fw-semibold" data-kt-plan-price-month="99" data-kt-plan-price-annual="399">
+                            99
+                        </span>                                    
+                    </div>
+
+                    <div class="text-white fw-bold mb-7">Monthly</div>
+
+                    <a href="#" class="btn bg-white bg-opacity-20 bg-hover-white text-hover-primary text-white fw-bold mx-auto">Start</a>                                 
+                </div>
+            </th>
+
+            <th class="text-center min-w-200px">
+                <div class="min-w-200px mb-15">                              
+                    <div class="text-primary fs-3 fw-bold mb-7">Lifetime</div>
+
+                    <div class="fs-5x d-flex justify-content-center align-items-start">
+                        <span class="fs-2 mt-3">$</span>
+                        
+                        <span class="lh-sm fw-semibold" data-kt-plan-price-month="199" data-kt-plan-price-annual="999">
+                            199
+                        </span>  
+                    </div>
+
+                    <div class="text-muted fw-bold mb-7">Monthly</div>
+
+                    <a href="#" class="btn btn-light-primary fw-bold mx-auto">Select</a>                               
+                </div>
+            </th>
+        </tr>
+    </thead>
+    <!--end::Table head-->
+    
+    <!--begin::Table body-->
+    <tbody>
+                                <tr>
+                <th class="card-rounded-start">
+                    <div class="fw-bold d-flex align-items-center ps-9 fs-3">Sublicense Visuals</div>
+                </th>
+
+                <td>
+                    <div class="flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-block">   
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-none">  
+                            <i class="ki-duotone ki-cross fs-2x text-0"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="px-7 flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-block">   
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-none"> 
+                            <i class="ki-duotone ki-cross fs-2x text-0"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+
+                <td class="card-rounded-end">
+                    <div class="flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-block"> 
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-none">   
+                            <i class="ki-duotone ki-cross fs-2x text-0"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+            </tr>
+                                <tr>
+                <th class="card-rounded-start">
+                    <div class="fw-bold d-flex align-items-center ps-9 fs-3">Free Updates</div>
+                </th>
+
+                <td>
+                    <div class="flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-block">   
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-none">  
+                            <i class="ki-duotone ki-cross fs-2x text-0"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="px-7 flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-block">   
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-none"> 
+                            <i class="ki-duotone ki-cross fs-2x text-0"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+
+                <td class="card-rounded-end">
+                    <div class="flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-block"> 
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-none">   
+                            <i class="ki-duotone ki-cross fs-2x text-0"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+            </tr>
+                                <tr>
+                <th class="card-rounded-start">
+                    <div class="fw-bold d-flex align-items-center ps-9 fs-3">Theme Support</div>
+                </th>
+
+                <td>
+                    <div class="flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-block">   
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-none">  
+                            <i class="ki-duotone ki-cross fs-2x text-0"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="px-7 flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-block">   
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-none"> 
+                            <i class="ki-duotone ki-cross fs-2x text-0"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+
+                <td class="card-rounded-end">
+                    <div class="flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-block"> 
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-none">   
+                            <i class="ki-duotone ki-cross fs-2x text-0"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+            </tr>
+                                <tr>
+                <th class="card-rounded-start">
+                    <div class="fw-bold d-flex align-items-center ps-9 fs-3">Unlimited Websites</div>
+                </th>
+
+                <td>
+                    <div class="flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-none">   
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-block">  
+                            <i class="ki-duotone ki-cross fs-2x text-danger"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="px-7 flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-block">   
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-none"> 
+                            <i class="ki-duotone ki-cross fs-2x text-danger"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+
+                <td class="card-rounded-end">
+                    <div class="flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-block"> 
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-none">   
+                            <i class="ki-duotone ki-cross fs-2x text-danger"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+            </tr>
+                                <tr>
+                <th class="card-rounded-start">
+                    <div class="fw-bold d-flex align-items-center ps-9 fs-3">DDOS Protection</div>
+                </th>
+
+                <td>
+                    <div class="flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-none">   
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-block">  
+                            <i class="ki-duotone ki-cross fs-2x text-danger"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="px-7 flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-none">   
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-block"> 
+                            <i class="ki-duotone ki-cross fs-2x text-danger"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+
+                <td class="card-rounded-end">
+                    <div class="flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-block"> 
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-none">   
+                            <i class="ki-duotone ki-cross fs-2x text-danger"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+            </tr>
+                                <tr>
+                <th class="card-rounded-start">
+                    <div class="fw-bold d-flex align-items-center ps-9 fs-3">Domain Reseller</div>
+                </th>
+
+                <td>
+                    <div class="flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-none">   
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-block">  
+                            <i class="ki-duotone ki-cross fs-2x text-danger"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="px-7 flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-none">   
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-block"> 
+                            <i class="ki-duotone ki-cross fs-2x text-danger"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+
+                <td class="card-rounded-end">
+                    <div class="flex-root d-flex justify-content-center">
+                        <span class="h-40px w-40px d-flex flex-center d-block"> 
+                            <i class="ki-duotone ki-check fs-2x text-success"></i>                                       
+                        </span>
+
+                        <span class="h-40px w-40px d-flex flex-center d-none">   
+                            <i class="ki-duotone ki-cross fs-2x text-danger"><span class="path1"></span><span class="path2"></span></i>                                       
+                        </span>
+                    </div>
+                </td>
+            </tr>
+                        </tbody>
+    <!--end::Table body-->
+</table>
+<!--end::Table-->
+</div>
+<!--end::Table container-->           
+</div>
+<!--end::Card body-->
+</div>
+<!--end::Pricing-->        </div>
+<!--end::Content container-->
+</div>
+<!--end::Content-->	
+
+                        </div>
+    <!--end::Content wrapper-->
+
+                        
+<!--begin::Footer-->
+<div id="kt_app_footer" class="app-footer ">
+
+
+
+<!--begin::Footer container-->
+<div class="app-container  container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3 ">
+<!--begin::Copyright-->
+<div class="text-gray-900 order-2 order-md-1">
+<span class="text-muted fw-semibold me-1">2024©</span>
+<a href="{% url "home" %}" target="_blank" class="text-gray-800 text-hover-primary">{{website_details.website_name}}</a>
+</div>
+<!--end::Copyright-->
+
+<!--begin::Menu-->
+<ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
+<li class="menu-item"><a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a></li>
+
+<li class="menu-item"><a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Support</a></li>
+
+<li class="menu-item"><a href="https://themes.getbootstrap.com/product/keen-the-ultimate-bootstrap-admin-theme/" target="_blank" class="menu-link px-2">Purchase</a></li>
+</ul>
+<!--end::Menu-->        </div>
+<!--end::Footer container-->
+</div>
+<!--end::Footer-->                            </div>
+{% endblock content %}

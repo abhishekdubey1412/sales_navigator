@@ -1,0 +1,739 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="app-main flex-column flex-row-fluid " id="kt_app_main">
+    <!--begin::Content wrapper-->
+    <div class="d-flex flex-column flex-column-fluid">
+        <!--begin::Toolbar-->
+        <div id="kt_app_toolbar" class="app-toolbar  py-3 py-lg-6 ">
+            <!--begin::Toolbar container-->
+            <div id="kt_app_toolbar_container" class="app-container  container-xxl d-flex flex-stack ">
+                <!--begin::Page title-->
+                <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3 ">
+                    <!--begin::Title-->
+                    <a href="{% url "home" %}" class="page-heading text-primary d-flex fs-5 align-items-center my-0">
+                        <i class="ki-duotone ki-black-left fs-2 me-2 text-primary"></i>
+                        Back to dashboard
+                    </a>
+                    <!--end::Title-->
+                </div>
+                <!--end::Page title-->
+            </div>
+            <!--end::Toolbar container-->
+        </div>
+        <!--end::Toolbar-->
+
+        <!--begin::Content-->
+        <div id="kt_app_content" class="app-content  flex-column-fluid">
+            <!--begin::Content container-->
+            <div id="kt_app_content_container" class="app-container  container-xxl">
+                <!--begin::Navbar-->
+                <div class="card mb-6 mb-xl-9">
+                    <div class="card-body pt-9 pb-0">
+                        <!--begin::Details-->
+                        <div class="d-flex flex-wrap flex-sm-nowrap mb-6">
+                            <!--begin::Wrapper-->
+                            <div class="flex-grow-1">
+                                <!--begin::Head-->
+                                <div class=" mb-2">
+                                    <!--begin::Details-->
+                                    <div class="d-flex justify-content-between">
+                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+                                            <path d="M10.9219 10.9688C10.3125 11.5312 10.3125 12.5156 10.9219 13.0781C11.4844 13.6875 12.4688 13.6875 13.0312 13.0781C13.6406 12.5156 
+                                                13.6406 11.5312 13.0312 10.9688C12.4688 10.3594 11.4844 10.3594 10.9219 10.9688ZM12 0.375C5.57812 0.375 0.375 5.625 0.375 12C0.375 18.4219 
+                                                5.57812 23.625 12 23.625C18.375 23.625 23.625 18.4219 23.625 12C23.625 5.625 18.375 0.375 12 0.375ZM17.9062 7.35938L14.8125 14.1094C14.625 
+                                                14.4375 14.3906 14.6719 14.0625 14.8594L7.3125 17.9531C6.51562 18.2812 5.71875 17.4844 6.04688 16.6875L9.14062 9.9375C9.32812 9.60938 9.5625 
+                                                9.375 9.89062 9.1875L16.6406 6.09375C17.4375 5.76562 18.2344 6.5625 17.9062 7.35938Z"
+                                                fill="#0A66C2">
+                                            </path>
+                                        </svg>
+
+                                        
+                                    </div>
+                                    <!--end::Details-->
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex flex-column">
+                                            <!--begin::Description-->
+                                            <div class="d-flex flex-wrap align-items-center fw-semibold mb-4 mt-8 fs-5 text-gray-500">
+                                                <button class="border border-secondary rounded bg-white">Phantom</button>
+                                                <i class="ki-duotone ki-minus fs-1"></i>
+                                                {{scraping_info.headline}}
+                                            </div>
+                                            <!--end::Description-->
+
+                                            <!--begin::Status-->
+                                            <div class="d-flex align-items-center mb-1">
+                                                <p class="text-gray-800 fs-2 fw-bold me-3">Untitled Sales Navigator Search Export ({{user.total_scraping}})</p>
+                                            </div>
+                                            <!--end::Status-->
+                                        </div>                                     
+                                        {% if scraping_info.status == 'failed' or scraping_info.status == 'in_process' or scraping_info.status == 'completed' %}
+                                        <button class="btn btn-primary fs-6 rounded-pill d-flex justify-content-center align-items-center" id="Launched" style="display: none !important">
+                                            <i class="ki-duotone ki-google-play fs-3 me-1">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                           </i>
+                                           Launched
+                                        </button>
+                                        {% else %}
+                                        <form method="post" id="Launch">
+                                            {% csrf_token %}
+                                            <button class="btn btn-primary fs-6 rounded-pill d-flex justify-content-center align-items-center">
+                                                <i class="ki-duotone ki-google-play fs-3 me-1">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                               </i>
+                                                Launch
+                                            </button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="alert alert-success" role="alert" id="SuccessAuthentication" style="display:none">
+                                        Successful authentication
+                                    </div>
+                                    <div class="alert alert-danger" role="alert" id="FailedAuthentication" style="display:none">
+                                        Failed authentication
+                                    </div>
+                                    <div class="alert alert-success" role="alert" id="ProfilesFound" style="display:none"> 
+                                    </div>
+                                    <div class="alert alert-success" role="alert" id="Processed" style="display:none">
+                                        Search successfully processed
+                                    </div>
+                                </div>
+                                <!--end::Head-->
+                            </div>
+                            <!--end::Wrapper-->
+                        </div>
+                        <!--end::Details-->
+
+                        <div class="separator"></div>
+
+                        <!--begin::Nav-->
+                        <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold">
+                            <!--begin::Nav item-->
+                            <li class="nav-item">
+                                <button class="nav-link text-active-primary py-5 me-6 active" id="results-button"> Results </button>
+                            </li>
+                            <!--end::Nav item-->
+
+                            <!--begin::Nav item-->
+                            <li class="nav-item">
+                                <button class="nav-link text-active-primary py-5 me-6" id="logs-button"> Activity </button>
+                            </li>
+                            <!--end::Nav item-->
+                        </ul>
+                        <!--end::Nav-->
+                    </div>
+                </div>
+                <!--end::Navbar-->
+
+                <!--begin::Table-->
+                <div class="card card-flush mt-6 mt-xl-9 mb-xl-9">
+                    <!--begin::Card body-->
+                    <div class="card-body pt-0">
+                        <!--begin::Table container-->
+                        <div class="table-responsive pt-xl-9">
+                            <!--begin::Table-->
+                            <div id="kt_profile_overview_table_wrapper" class="dt-container dt-bootstrap5 dt-empty-footer" style="display: none;">
+                                <!--begin::Actions-->
+                                <div class="d-flex mb-4 justify-content-end">
+                                    <a title="Export" href="{% url "export_csv" scraping_info.scraping_id %}" class="btn btn-light-primary pt-3 pb-3 pe-3 ps-3">
+                                        <i class="ki-duotone ki-exit-down fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                    </a>
+                                </div>
+                                <!--end::Actions-->
+                                <div id="" class="table-responsive">
+                                    <table class="table align-middle table-row-dashed fs-6 gy-5 dataTable" id="kt_customers_table" style="width: 100%; overflow:auto;">
+                                        <thead class="rounded-top" style="background: #5173ea;">
+                                            <tr class="text-start text-gray-500 btn-primary fw-bold fs-7 text-uppercase gs-0">
+                                            </tr>
+                                        </thead>
+                                        
+                                        <tbody class="fw-semibold text-gray-600">
+                                        </tbody>
+                                        <tfoot></tfoot>
+                                    </table>                                                   
+                                </div>
+                                <div id="" class="row">
+                                    <div id="" class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start dt-toolbar">
+                                    </div>
+                                    <div id="" class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
+                                        <div class="dt-paging paging_simple_numbers">
+                                            <nav>
+                                                <ul class="pagination">
+                                                    <li class="dt-paging-button page-item disabled">
+                                                        <button class="page-link previous" role="link" type="button" aria-controls="kt_customers_table" aria-disabled="true" aria-label="Previous" data-dt-idx="previous" tabindex="-1">
+                                                            <i class="previous"></i>
+                                                        </button>
+                                                    </li>
+                                                    <li class="dt-paging-button page-item active">
+                                                        <button class="page-link" role="link" type="button" aria-controls="kt_customers_table" aria-current="page" data-dt-idx="0">1</button>
+                                                    </li>
+                                                    <li class="dt-paging-button page-item">
+                                                        <button class="page-link next" role="link" type="button" aria-controls="kt_customers_table" aria-label="Next" data-dt-idx="next">
+                                                            <i class="next"></i>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-px text-center py-20 my-10" id="kt_profile_overview_table_wrapper_show">
+                                <h1 class="text-center">No Results<h1>
+                            </div>
+                            <!--end::Table-->
+                        </div>
+                        <!--end::Table container-->
+                    </div>
+                    <!--end::Card body-->
+                </div>
+                <!--end::Table-->
+
+                <div class="row gy-5 g-xl-10" style="display: none;">
+                    <!--begin::Col-->
+                    <div class="col-xl-8">
+                        <!--begin::Table Widget 3-->
+                        <div class="card card-flush h-lg-100">
+                            <!--begin::Card header-->
+                            <div class="card-header py-7">
+                                <!--begin::Tabs-->
+                                <div class="card-title pt-3 mb-0 gap-4 gap-lg-10 gap-xl-15 nav nav-tabs border-bottom-0">
+                                    <!--begin::Tab item-->
+                                    <h2 class="fw-bold"> Activity </h2>
+                                    <!--end::Tab item-->
+                                </div>
+                                <!--end::Tabs-->
+                            </div>
+                            <!--end::Card header-->
+
+                            <div style="padding: 0 2.25rem">
+                                <div class="d-flex align-items-center" id="ScrapinStatus" style='display:none !important'>
+                                    <i class="ki-duotone ki-check-circle fs-1 text-success me-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </i>
+                                    <p></p>
+                                </div>
+                                <div style="padding: 0 2.25rem">
+                                    <div class="card-body pt-4 pb-2 ps-3 rounded-2 bg-secondary bg-gradient">                 
+                                        <!--begin::Item-->
+                                        <div class="d-flex mb-4" id="SuccessAuthenticationActivity" style="display:none !important">
+                                            <!--begin::Section-->
+                                            <i class="ki-duotone ki-check fs-2 me-2 text-success"></i>
+                                            <div class="fw-semibold fs-6 me-2 text-success">Successful authentication</div>                   
+                                            <!--end::Section-->           
+                                        </div>
+                                        <!--end::Item-->
+
+                                        <!--begin::Item-->
+                                        <div class="d-flex mb-4" id="FailedAuthenticationActivity" style="display:none !important">
+                                            <!--begin::Section-->
+                                            <i class="ki-duotone ki-check fs-2 me-2 text-danger"></i>
+                                            <div class="fw-semibold fs-6 me-2 text-danger">Failed authentication</div>                   
+                                            <!--end::Section-->           
+                                        </div>
+                                        <!--end::Item-->
+                                        
+                                        <!--begin::Item-->
+                                        <div class="d-flex mb-4" id="ProfilesFoundActivity" style="display:none !important">
+                                            <!--begin::Section-->
+                                            <i class="ki-duotone ki-check fs-2 me-2 text-success"></i>
+                                            <div class="fw-semibold fs-6 me-2 text-success"></div>                   
+                                            <!--end::Section-->           
+                                        </div>
+                                        <!--end::Item-->
+
+                                        <!--begin::Item-->
+                                        <div class="d-flex mb-4" id="ProcessedActivity" style="display:none !important">
+                                            <!--begin::Section-->
+                                            <i class="ki-duotone ki-check fs-2 me-2 text-success"></i>
+                                            <div class="fw-semibold fs-6 me-2 text-success">Search successfully processed</div>                   
+                                            <!--end::Section-->           
+                                        </div>
+                                        <!--end::Item-->
+                                    </div>
+                                </div>
+                                <div class="fw-bold" style="padding: 1rem 2.25rem">
+                                    <p id="startingTime" class="mb-0 fs-6 text-success">Started at: </p>
+                                    <p id="duration" class="mb-0 fs-6 text-success">Duration: </p>
+                                </div>                                
+                            </div>
+                        </div>
+                        <!--end::Table Widget 3-->
+                    </div>
+                    <!--end::Col-->
+
+                    <!--begin::Col-->
+                    <div class="col-xl-4">
+                        <!--begin::Chart widget 2-->
+                        <div class="card card-flush h-lg-100">
+                            <!--begin::Header-->
+                            <div class="card-header py-7">
+                                <!--begin::Tab item-->
+                                <div class="card-title pt-3 mb-0 gap-4 gap-lg-10 gap-xl-15 nav nav-tabs border-bottom-0 d-flex flex-column">
+                                    <!--begin::Tab item-->
+                                    <h2 class="fw-bold"> Setup </h2>
+                                    <!--end::Tab item-->
+
+                                    <div class="mb-5"> 
+                                        <!--begin::Item-->
+                                        <div class="d-flex flex-stack">                 
+                                            <!--begin::Section-->                                  
+                                            <div class="d-flex align-items-center me-3">
+                                                <!--begin::Section-->                                  
+                                                <div class="flex-grow-1">
+                                                    <span class="text-gray-500 fw-semibold d-block fs-6">Input Type</span>
+                                                    <a href="#" class="text-gray-800 text-hover-primary fs-5 fw-bold lh-0">{{scraping_info.headline}}</a>
+                                                </div>                   
+                                                <!--end::Section-->
+                                            </div>                   
+                                            <!--end::Section-->
+                                        </div>
+                                        <!--end::Item-->
+            
+                                        <!--begin::Separator-->
+                                        <div class="separator separator-dashed my-4"></div>
+
+                                        <!--begin::Item-->
+                                        <div class="d-flex flex-stack">                 
+                                            <!--begin::Section-->                                  
+                                            <div class="d-flex align-items-center me-3">
+                                                <!--begin::Section-->                                  
+                                                <div class="flex-grow-1">
+                                                    <span class="text-gray-500 fw-semibold d-block fs-6">Number Of Profiles</span>
+                                                    <a href="#" class="text-gray-800 text-hover-primary fs-5 fw-bold lh-0">2500</a>
+                                                </div>                   
+                                                <!--end::Section-->
+                                            </div>                   
+                                            <!--end::Section-->
+                                        </div>
+                                        <!--end::Item-->
+            
+                                        <!--begin::Separator-->
+                                        <div class="separator separator-dashed my-4"></div>
+
+                                        <!--begin::Item-->
+                                        <div class="d-flex flex-stack">                 
+                                            <!--begin::Section-->                                  
+                                            <div class="d-flex align-items-center me-3">
+                                                <!--begin::Section-->                                  
+                                                <div class="flex-grow-1">
+                                                    <span class="text-gray-500 fw-semibold d-block fs-6">Number Of Results Per Search</span>
+                                                    <a href="#" class="text-gray-800 text-hover-primary fs-5 fw-bold lh-0">2500</a>
+                                                </div>                   
+                                                <!--end::Section-->
+                                            </div>                   
+                                            <!--end::Section-->
+                                        </div>
+                                        <!--end::Item-->
+            
+                                        <!--begin::Separator-->
+                                        <div class="separator separator-dashed my-4"></div>
+                                        
+                                        <!--begin::Item-->
+                                        <div class="d-flex flex-stack">                 
+                                            <!--begin::Section-->                                  
+                                            <div class="d-flex align-items-center me-3">
+                                                <!--begin::Section-->                                  
+                                                <div class="flex-grow-1">
+                                                    <span class="text-gray-500 fw-semibold d-block fs-6">Number Of Lines Per Launch</span>
+                                                    <a href="#" class="text-gray-800 text-hover-primary fs-5 fw-bold lh-0">10</a>
+                                                </div>                   
+                                                <!--end::Section-->
+                                            </div>                   
+                                            <!--end::Section-->
+                                        </div>
+                                        <!--end::Item-->
+            
+                                        <!--begin::Separator-->
+                                        <div class="separator separator-dashed my-4"></div>
+                                        <!--end::Separator-->
+
+                                        <!--begin::Item-->
+                                        <div class="d-flex flex-stack">                 
+                                            <!--begin::Section-->                                  
+                                            <div class="d-flex align-items-center me-3">
+                                                <!--begin::Section-->                                  
+                                                <div class="flex-grow-1">
+                                                    <span class="text-gray-500 fw-semibold d-block fs-6">Remove Duplicate Profiles</span>
+                                                    <a href="#" class="text-gray-800 text-hover-primary fs-5 fw-bold lh-0">false</a>
+                                                </div>                   
+                                                <!--end::Section-->
+                                            </div>                   
+                                            <!--end::Section-->
+                                        </div>
+                                        <!--end::Item-->
+            
+                                        <!--begin::Separator-->
+                                        <div class="separator separator-dashed my-4"></div>
+                                        <!--end::Separator-->
+
+                                        <!--begin::Item-->
+                                        <div class="d-flex flex-stack">                 
+                                            <!--begin::Section-->                                  
+                                            <div class="d-flex align-items-center me-3">
+                                                <!--begin::Section-->                                  
+                                                <div class="flex-grow-1">
+                                                    <span class="text-gray-500 fw-semibold d-block fs-6">Sales Navigator Search Url</span>
+                                                    <p class="text-gray-800 fs-5 fw-bold mb-0">{{scraping_info.sales_url|truncatechars:39}}</p>
+                                                </div>                   
+                                                <!--end::Section-->
+                                            </div>                   
+                                            <!--end::Section-->
+                                        </div>
+                                        <!--end::Item-->
+            
+                                        <!--begin::Separator-->
+                                        <div class="separator separator-dashed my-4"></div>
+                                        <!--end::Separator-->
+                                        
+                                        <!--begin::Item-->
+                                        <div class="d-flex flex-stack">                 
+                                            <!--begin::Section-->                                  
+                                            <div class="d-flex align-items-center me-3">
+                                                <!--begin::Section-->                                  
+                                                <div class="flex-grow-1">
+                                                    <span class="text-gray-500 fw-semibold d-block fs-6">Session Cookie</span>
+                                                    <p class="text-gray-800 fs-5 fw-bold mb-0">{{scraping_info.session_cookie|truncatechars:35}}</p>
+                                                </div>                   
+                                                <!--end::Section-->
+                                            </div>                   
+                                            <!--end::Section-->
+                                        </div>
+                                        <!--end::Item-->
+            
+                                        <!--begin::Separator-->
+                                        <div class="separator separator-dashed my-4"></div>
+                                        <!--end::Separator-->
+
+                                        <!--begin::Item-->
+                                        <div class="d-flex flex-stack">                 
+                                            <!--begin::Section-->                                  
+                                            <div class="d-flex align-items-center">
+                                                <!--begin::Section-->                                  
+                                                <div class="flex-grow-1">
+                                                    <span class="text-gray-500 fw-semibold d-block fs-6">User Agent</span>
+                                                    <p class="text-gray-800 fs-5 fw-bold mb-0">{{scraping_info.user_agent|truncatechars:39}}</p>
+                                                </div>                   
+                                                <!--end::Section-->
+                                            </div>                   
+                                            <!--end::Section-->
+                                        </div>
+                                        <!--end::Item-->
+            
+                                        <!--begin::Separator-->
+                                        <div class="separator separator-dashed my-4"></div>
+                                        <!--end::Separator-->
+                                            
+                                        <!--begin::Item-->
+                                        <div class="d-flex flex-stack">                 
+                                            <!--begin::Section-->                                  
+                                            <div class="d-flex align-items-center me-3">
+                                                <!--begin::Section-->                                  
+                                                <div class="flex-grow-1">
+                                                    <span class="text-gray-500 fw-semibold d-block fs-6">Launch</span>
+                                                    <a href="#" class="text-gray-800 text-hover-primary fs-5 fw-bold lh-0">manually</a>
+                                                </div>                   
+                                                <!--end::Section-->
+                                            </div>                   
+                                            <!--end::Section-->
+                                        </div>
+                                        <!--end::Item-->    
+                                    </div>
+                                </div>
+                                <!--end::Tab item-->
+                            </div>
+                            <!--end::Header-->
+                        </div>
+                        <!--end::Chart widget 2-->
+                    </div>
+                    <!--end::Col-->
+                </div>
+            </div>
+            <!--end::Content container-->
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Content wrapper-->
+    <!--begin::Footer-->
+    <div id="kt_app_footer" class="app-footer ">
+        <!--begin::Footer container-->
+        <div class="app-container  container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3 ">
+            <!--begin::Copyright-->
+            <div class="text-gray-900 order-2 order-md-1">
+                <span class="text-muted fw-semibold me-1">2024©</span>
+                <a href="{% url "home" %}" target="_blank" class="text-gray-800 text-hover-primary">{{website_details.website_name}}</a>
+            </div>
+            <!--end::Copyright-->
+
+            <!--begin::Menu-->
+            <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
+                <li class="menu-item"><a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
+                </li>
+
+                <li class="menu-item"><a href="https://devs.keenthemes.com" target="_blank"
+                        class="menu-link px-2">Support</a></li>
+
+                <li class="menu-item"><a
+                        href="https://themes.getbootstrap.com/product/keen-the-ultimate-bootstrap-admin-theme/"
+                        target="_blank" class="menu-link px-2">Purchase</a></li>
+            </ul>
+            <!--end::Menu-->
+        </div>
+        <!--end::Footer container-->
+    </div>
+    <!--end::Footer-->
+</div>
+{% endblock content %}
+{% block jscode %}
+<script>
+    document.getElementById("results-button").addEventListener("click", function() {
+      document.querySelector(".row.gy-5.g-xl-10").style.display = "none";
+      document.querySelector(".card.card-flush.mt-6.mt-xl-9.mb-xl-9").style.display = "block";
+      this.classList.toggle("active", true);
+      document.getElementById("logs-button").classList.toggle("active", false);
+    });
+  
+    document.getElementById("logs-button").addEventListener("click", function() {
+      document.querySelector(".row.gy-5.g-xl-10").style.display = "flex";
+      document.querySelector(".card.card-flush.mt-6.mt-xl-9.mb-xl-9").style.display = "none";
+      this.classList.toggle("active", true);
+      document.getElementById("results-button").classList.toggle("active", false);
+    });
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        const scrapingInfoId = window.location.pathname.split('/')[2]; // Extract the ID from the URL
+        const inputType = '{{ scraping_info.input_type }}';
+        let statusCheck = ''; // Variable to track the status
+        const rowsPerPage = 10; // Set pagination parameters
+        let currentPage = 1; // Initialize current page
+        let totalRows = 0; // Total number of rows
+
+        // By default, logs-button will be active
+        document.getElementById("logs-button").classList.toggle("active", true);
+        document.querySelector(".row.gy-5.g-xl-10").style.display = "flex";
+        document.querySelector(".card.card-flush.mt-6.mt-xl-9.mb-xl-9").style.display = "none";
+        document.getElementById("results-button").classList.toggle("active", false);
+
+        function fetchScrapingInfo() {
+            $.ajax({
+                url: `/scraping-info/${scrapingInfoId}/?input-type=${inputType}`,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // Check authentication status
+                    if (data.authentication === 'successful') {
+                        toggleElements(true, false);
+                    } else if (data.authentication === 'failed') {
+                        toggleElements(false, true);
+                    }
+
+                    // Update status and check
+                    statusCheck = data.status;
+                    handleStatusUpdate(data);
+                    
+                    // Update starting time and duration
+                    $('#startingTime').text('Started at: ' + (data.starting_time ? new Date(data.starting_time).toLocaleString() : 'N/A'));
+                    $('#duration').text('Duration: ' + (data.duration || 'N/A'));
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                    $('#errorMessage').text('An error occurred while fetching scraping info. Please try again later.').show();
+                }
+            });
+        }
+
+        function handleStatusUpdate(data) {
+            if (statusCheck === 'completed') {
+                $('#Processed, #ProcessedActivity, #Launched').show();
+                $('#ScrapinStatus').show().find('i').attr('class', 'ki-duotone ki-check-circle fs-1 text-success me-2');
+                $('#ScrapinStatus').show().find('p').text('Completed').attr('class', 'fw-bold fs-5 text-success mb-0 pb-0 fs-2');
+                $('#Launch').hide();
+                $('#kt_profile_overview_table_wrapper_show').hide();
+                $('#kt_profile_overview_table_wrapper').show();
+                fetchScrapedData();
+
+                // When status is "completed", results-button will be active
+                document.getElementById("results-button").classList.toggle("active", true);
+                document.querySelector(".row.gy-5.g-xl-10").style.display = "none";
+                document.querySelector(".card.card-flush.mt-6.mt-xl-9.mb-xl-9").style.display = "block";
+                document.getElementById("logs-button").classList.toggle("active", false);
+            } else if (statusCheck === 'in_process') {
+                $('#ScrapinStatus').show().find('i').attr('class', 'ki-duotone ki-check-circle fs-1 text-info me-2');
+                $('#ScrapinStatus').show().find('p').text('In Progress').attr('class', 'fw-bold fs-5 text-info mb-0 pb-0 fs-2');
+                $('#Launched').show();
+                $('#Launch').hide();
+            } else if (statusCheck === 'failed') {
+                $('#ScrapinStatus').show().find('i').attr('class', 'ki-duotone ki-check-circle fs-1 text-danger me-2');
+                $('#ScrapinStatus').show().find('p').text('Error').attr('class', 'fw-bold fs-5 text-danger mb-0 pb-0 fs-2');
+                $('#Launched').show();
+                $('#Launch').hide();
+                fetchScrapedData();
+            }
+
+            // Show profile count
+            if (data.total_records > 0) {
+                $('#ProfilesFound').show().text(data.total_records + ' profiles found');
+                $('#ProfilesFoundActivity').show().find('.fw-semibold.fs-6.me-2.text-success').text(data.total_records + ' profiles found');
+                totalRows = data.total_records; // Store total rows for pagination
+            } else {
+                $('#ProfilesFound').hide();
+                $('#ProfilesFoundActivity').hide();
+            }
+        }
+
+        function fetchScrapedData() {
+            $.ajax({
+                url: `/scraped-data/${scrapingInfoId}/?input-type=${inputType}`,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if (data.length > 0) {
+                        const keys = Object.keys(data[0]);
+                        populateTableHeader(keys);
+                        populateTableBody(data);
+                    } else {
+                        console.log('No data found.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching scraped data:', error);
+                    $('#errorMessage').text('An error occurred while fetching scraped data. Please try again later.').show();
+                }
+            });
+        }
+
+        function populateTableHeader(keys) {
+            const $thead = $('#kt_customers_table thead tr');
+            $thead.empty(); // Clear existing <th> elements
+            $thead.prepend($('<th>', {
+                class: 'min-w-60px pt-4 pb-4 text-center',
+                scope: 'col',
+                html: `<span class="dt-column-title text-light" role="button">No.</span>`
+            }));
+
+            keys.forEach(key => {
+                const className = key === 'summary' ? 'min-w-600px pt-4 pb-4' :
+                                  key === 'query' ? 'min-w-150px pt-4 pb-4' :
+                                  key === 'company_description' ? 'min-w-400px pt-4 pb-4' :
+                                  'min-w-150px pt-4 pb-4';
+                const $th = $('<th>', {
+                    class: className,
+                    scope: 'col',
+                    html: `<span class="dt-column-title text-light" role="button">${key.charAt(0).toUpperCase() + key.slice(1)}</span>`
+                });
+                $thead.append($th);
+            });
+        }
+
+        function populateTableBody(data) {
+            const $tbody = $('#kt_customers_table tbody');
+            $tbody.empty(); // Clear existing rows
+
+            data.forEach((item, index) => {
+                const $tr = $('<tr>');
+                $tr.append($('<td>', {
+                    class: 'text-center',
+                    text: index + 1
+                }));
+
+                Object.values(item).forEach(value => {
+                    $tr.append($('<td>').text(value)); // Customize this as needed
+                });
+                $tbody.append($tr);
+            });
+
+            totalRows = data.length; // Update total rows
+            totalPages = Math.ceil(totalRows / rowsPerPage); // Calculate total pages
+            displayPage(currentPage); // Initial display of current page
+        }
+
+        function toggleElements(success, failure) {
+            $('#SuccessAuthentication, #SuccessAuthenticationActivity').toggle(success);
+            $('#FailedAuthentication, #FailedAuthenticationActivity').toggle(failure);
+        }
+
+        // Pagination Logic
+        function displayPage(page) {
+            const $tbody = $('#kt_customers_table tbody');
+            const trs = $tbody.find('tr');
+            const start = (page - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+
+            trs.hide(); // Hide all rows
+            trs.slice(start, end).show(); // Show rows for current page
+            updatePagination(); // Update pagination controls
+        }
+
+        function updatePagination() {
+            const paginationContainer = $('.pagination');
+            paginationContainer.empty(); // Clear existing controls
+
+            // Previous button
+            const prevButton = $('<li>').addClass('dt-paging-button page-item ' + (currentPage === 1 ? 'disabled' : ''))
+                .append(`<button class="page-link previous" type="button" onclick="changePage(${currentPage - 1})"><i class="previous"></i></button>`);
+            paginationContainer.append(prevButton);
+
+            const maxPagesToShow = 3; // How many page buttons to show at a time (including ellipsis)
+            const surroundingPages = 1; // Pages to show around the current page
+
+            // Start and end page numbers for the range to display
+            let startPage = Math.max(1, currentPage - surroundingPages);
+            let endPage = Math.min(totalPages, currentPage + surroundingPages);
+
+            // Add first page and "..."
+            if (startPage > 2) {
+                paginationContainer.append(`<li class="dt-paging-button page-item"><button class="page-link" type="button" onclick="changePage(1)">1</button></li>`);
+                paginationContainer.append(`<li class="dt-paging-button page-item"><span class="page-link">...</span></li>`);
+            }
+
+            // Add pages from startPage to endPage (around the active page)
+            for (let i = startPage; i <= endPage; i++) {
+                const pageButton = $('<li>').addClass('dt-paging-button page-item ' + (i === currentPage ? 'active' : ''))
+                    .append(`<button class="page-link" type="button" onclick="changePage(${i})">${i}</button>`);
+                paginationContainer.append(pageButton);
+            }
+
+            // Add "..." and last page
+            if (endPage < totalPages - 1) {
+                paginationContainer.append(`<li class="dt-paging-button page-item"><span class="page-link">...</span></li>`);
+            }
+            if (endPage < totalPages) {
+                paginationContainer.append(`<li class="dt-paging-button page-item"><button class="page-link" type="button" onclick="changePage(${totalPages})">${totalPages}</button></li>`);
+            }
+
+            // Create next button
+            const nextButton = $('<li>').addClass('dt-paging-button page-item ' + (currentPage === totalPages ? 'disabled' : ''))
+                .append(`<button class="page-link next" type="button" onclick="changePage(${currentPage + 1})"><i class="next"></i></button>`);
+            paginationContainer.append(nextButton);
+        }
+
+        window.changePage = function(page) {
+            if (page < 1 || page > totalPages) return; // Prevent going out of bounds
+            currentPage = page;
+            displayPage(currentPage);
+        };
+
+        // Fetch data immediately when the page loads
+        fetchScrapingInfo();
+
+        // Set interval to fetch data every 3 seconds only if status is not completed or failed
+        const intervalId = setInterval(() => {
+            if (statusCheck === 'completed' || statusCheck === 'failed') {
+                clearInterval(intervalId); // Stop the interval if status is completed or failed
+            } else {
+                fetchScrapingInfo();
+            }
+        }, 3000);
+    });
+</script>
+{% endblock jscode %}

@@ -1,0 +1,590 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<!--begin::Main-->
+<div class="app-main flex-column flex-row-fluid " id="kt_app_main">
+    <!--begin::Content wrapper-->
+    <div class="d-flex flex-column flex-column-fluid">
+        <!--begin::Toolbar-->
+        <div id="kt_app_toolbar" class="app-toolbar  py-3 py-lg-6 ">
+            <!--begin::Toolbar container-->
+            <div id="kt_app_toolbar_container" class="app-container  container-xxl d-flex align-items-start">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="30" height="30" class="mt-1"><path d="M10.9219 10.9688C10.3125 11.5312 10.3125 12.5156 10.9219 13.0781C11.4844 13.6875 12.4688 13.6875 13.0312 13.0781C13.6406 12.5156 13.6406 11.5312 13.0312 10.9688C12.4688 10.3594 11.4844 10.3594 10.9219 10.9688ZM12 0.375C5.57812 0.375 0.375 5.625 0.375 12C0.375 18.4219 5.57812 23.625 12 23.625C18.375 23.625 23.625 18.4219 23.625 12C23.625 5.625 18.375 0.375 12 0.375ZM17.9062 7.35938L14.8125 14.1094C14.625 14.4375 14.3906 14.6719 14.0625 14.8594L7.3125 17.9531C6.51562 18.2812 5.71875 17.4844 6.04688 16.6875L9.14062 9.9375C9.32812 9.60938 9.5625 9.375 9.89062 9.1875L16.6406 6.09375C17.4375 5.76562 18.2344 6.5625 17.9062 7.35938Z" fill="#0A66C2"></path></svg>
+                <!--begin::Page title-->
+                <div class="page-title d-flex flex-column justify-content-center flex-wrap ms-3">
+                    <!--begin::Title-->
+                    <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">
+                        Untitled Sales Navigator Search Export ({{user.total_scraping}})
+                    </h1>
+                    <!--end::Title-->
+                    <!--begin::SubTitle-->
+                    <p class="breadcrumb-item text-muted">{{scraping_type.heading}}</p>
+                    <!--end::SubTitle-->
+                </div>
+                <!--end::Page title-->
+            </div>
+            <!--end::Toolbar container-->
+        </div>
+        <!--end::Toolbar-->
+
+        <!--begin::Content-->
+        <div id="kt_app_content" class="app-content  flex-column-fluid ">
+            <!--begin::Content container-->
+            <div id="kt_app_content_container" class="app-container  container-xxl ">
+                <!--begin::Stepper-->
+                <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid gap-10" id="kt_create_account_stepper" data-kt-stepper="true">
+                    <!--begin::Aside-->
+                    <div class="card d-flex justify-content-center justify-content-xl-start flex-row-auto w-100 w-xl-300px w-xxl-400px">
+                        <!--begin::Wrapper-->
+                        <div class="card-body px-6 px-lg-10 px-xxl-15 py-20">
+                            <!--begin::Nav-->
+                            <div class="stepper-nav">
+                                <!--begin::Step 1-->
+                                <div class="stepper-item current" data-kt-stepper-element="nav">
+                                    <!--begin::Wrapper-->
+                                    <div class="stepper-wrapper">
+                                        <!--begin::Icon-->
+                                        <div class="stepper-icon w-40px h-40px">
+                                            <i class="ki-duotone ki-check fs-2 stepper-check"></i>
+                                            <span class="stepper-number">1</span>
+                                        </div>
+                                        <!--end::Icon-->
+
+                                        <!--begin::Label-->
+                                        <div class="stepper-label">
+                                            <h3 class="stepper-title"> Searches to export </h3>
+                                            <div class="stepper-desc fw-semibold"> Provide the Sales Navigator searches</div>
+                                        </div>
+                                        <!--end::Label-->
+                                    </div>
+                                    <!--end::Wrapper-->
+
+                                    <!--begin::Line-->
+                                    <div class="stepper-line h-40px"></div>
+                                    <!--end::Line-->
+                                </div>
+                                <!--end::Step 1-->
+
+                                <!--begin::Step 2-->
+                                <div class="stepper-item" data-kt-stepper-element="nav">
+                                    <!--begin::Wrapper-->
+                                    <div class="stepper-wrapper">
+                                        <!--begin::Icon-->
+                                        <div class="stepper-icon w-40px h-40px">
+                                            <i class="ki-duotone ki-check fs-2 stepper-check"></i> 
+                                            <span class="stepper-number">2</span>
+                                        </div>
+                                        <!--end::Icon-->
+
+                                        <!--begin::Label-->
+                                        <div class="stepper-label">
+                                            <h3 class="stepper-title"> Connect to Sales Navigator </h3>
+                                        </div>
+                                        <!--end::Label-->
+                                    </div>
+                                    <!--end::Wrapper-->
+
+                                    <!--begin::Line-->
+                                    <div class="stepper-line h-40px"></div>
+                                    <!--end::Line-->
+                                </div>
+                                <!--end::Step 2-->
+
+                                <!--begin::Step 3-->
+                                <div class="stepper-item" data-kt-stepper-element="nav">
+                                    <!--begin::Wrapper-->
+                                    <div class="stepper-wrapper">
+                                        <!--begin::Icon-->
+                                        <div class="stepper-icon w-40px h-40px">
+                                            <i class="ki-duotone ki-check fs-2 stepper-check"></i> 
+                                            <span class="stepper-number">3</span>
+                                        </div>
+                                        <!--end::Icon-->
+
+                                        <!--begin::Label-->
+                                        <div class="stepper-label">
+                                            <h3 class="stepper-title"> Behavior </h3>
+                                        </div>
+                                        <!--end::Label-->
+                                    </div>
+                                    <!--end::Wrapper-->
+                                </div>
+                                <!--end::Step 3-->
+                            </div>
+                            <!--end::Nav-->
+                        </div>
+                        <!--end::Wrapper-->
+                    </div>
+                    <!--begin::Aside-->
+
+                    <!--begin::Content-->
+                    <div class="card d-flex flex-row-fluid flex-center">
+                        {% if active_package %}
+                            {% if active_package.scraping_slots > active_package.used_slots and total_seconds > 15 %}
+                                <!--begin::Form-->
+                                <form class="card-body py-20 w-100 mw-xl-700px px-9 fv-plugins-bootstrap5 fv-plugins-framework" novalidate="novalidate" id="kt_create_account_form" method="POST">
+                                    {% csrf_token %}
+
+                                    <div class="startsteps">
+                                        <!--begin::Step 1-->
+                                        <div class="current" data-kt-stepper-element="content">
+                                            <!--begin::Wrapper-->
+                                            <div class="w-100">
+                                                <!--begin::Heading-->
+                                                <div class="pb-2">
+                                                    <!--begin::Title-->
+                                                    <h2 class="fw-bold d-flex align-items-center text-gray-900">
+                                                        {% if scraping_type.scraping_type != "PDeepCSV" and scraping_type.scraping_type != "CDeepCSV" %}
+                                                        Paste the Sales Navigator search URL
+                                                        {% else %}
+                                                        Paste Upload CSV File with Sales Navigator URL
+                                                        {% endif %}
+                                                    </h2>
+                                                    <!--end::Title-->
+
+                                                    <!--begin::Notice-->
+                                                    <div class="text-muted fw-semibold fs-6 mt-5">
+                                                        <ol>
+                                                            <li>Perform a new search on Sales Navigator.</li>
+                                                            <li>Sales Navigator only displays the first 2500 results of a people search, 
+                                                                or 1000 of an account search. To obtain better results, 
+                                                                we recommend narrowing your search by category, city or connection degree.</li>
+                                                            <li>Paste the search URL below.</li>
+                                                        </ol>
+                                                    </div>
+                                                    <!--end::Notice-->
+                                                </div>
+                                                <!--end::Heading-->
+
+                                                <!--begin::Input group-->
+                                                <div class="mb-5 fv-row fv-plugins-icon-container">            
+                                                    <!--begin::Input-->
+                                                    {% if scraping_type.scraping_type != "PDeepCSV" and scraping_type.scraping_type != "CDeepCSV" %}
+                                                    <input type="text" class="form-control" name="sales_url" placeholder="https://www.linkedin.com/sales/search/…" value="">
+                                                    {% else %}
+                                                    <input type="file" class="form-control" name="csv_file_url" placeholder="https://www.linkedin.com/sales/search/…" value="">
+                                                    {% endif %}
+                                                    <!--end::Input-->
+                                                    <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"> </div>
+                                                <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div><div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div>
+                                                <!--end::Input group-->
+                                            </div>
+                                            <!--end::Wrapper-->
+                                        </div>
+                                        <!--end::Step 1-->
+
+                                        <!--begin::Step 2-->
+                                        <div data-kt-stepper-element="content">
+                                            <!--begin::Wrapper-->
+                                            <div class="w-100">
+                                                <!--begin::Input group-->
+                                                <div class="mb-10 fv-row fv-plugins-icon-container">
+                                                    <div class="w-100">
+                                                        <!--begin::Input group-->
+                                                        <div class="fv-row mb-10">
+                                                            <!--begin::Dropzone-->
+                                                            <div class="dropzone dz-clickable">
+                                                                <p class="text-start">Install our extension to get your cookies instantly
+                                                                    To automate actions on your behalf, PhantomBuster connects to your LinkedIn account using your session cookie.
+                                                                </p>
+                                                                <!--begin::Message-->
+                                                                <a class="dz-message needsclick d-flex align-items-center" href="#">
+                                                                    <!--begin::Icon-->
+                                                                    <svg viewBox="0 0 42 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="42" height="32">
+                                                                        <g clip-path="url(#i231)">
+                                                                            <rect width="42" height="32" fill="#F5F1EF"></rect>
+                                                                            <path d="M-0.0385742 0.366699H42.0378V30.1C42.0378 31.2046 41.1424 32.1 40.0378 32.1H1.96142C0.856854 32.1 -0.0385742 31.2046 -0.0385742 30.1V0.366699Z" fill="#F5F1EF"></path>
+                                                                            <path d="M25.7727 3.69995H16.2272C15.1581 3.69995 14.3181 4.43328 14.3181 5.36662C14.3181 6.29995 15.1581 7.03328 16.2272 7.03328H25.7727C26.8418 7.03328 27.6818 6.29995 27.6818 5.36662C27.6818 4.43328 26.8418 3.69995 25.7727 3.69995Z" fill="white"></path>
+                                                                            <mask id="i232" maskUnits="userSpaceOnUse" x="3" y="14" width="36" height="35" style="mask-type: alpha;">
+                                                                                <ellipse cx="21.0002" cy="31.564" rx="17.5636" ry="17.2308" fill="#C4C4C4"></ellipse>
+                                                                            </mask>
+                                                                            <g mask="url(#i232)">
+                                                                                <path d="M5.72729 13.7V33.1666H13.86L21 22.3666H39.1746V13.7H5.72729ZM5.72729 13.7V33.1666H13.86L21 22.3666H39.1746V13.7H5.72729Z" fill="#DB4437"></path>
+                                                                                <path d="M2.82556 45.4333H20.1219L28.1401 38.4333V33.1999H13.8219L2.82556 16.7V45.4333ZM2.82556 45.4333H20.1219L28.1401 38.4333V33.1999H13.8219L2.82556 16.7V45.4333Z" fill="#0F9D58"></path>
+                                                                                <path d="M21.0003 22.3667L28.1402 33.1667L20.1221 45.4334H39.1748V22.3667H21.0003ZM21.0003 22.3667L28.1402 33.1667L20.1221 45.4334H39.1748V22.3667H21.0003Z" fill="#FFCD40"></path>
+                                                                                <path d="M21.0001 36.7667C25.5549 36.7667 29.2474 33.5431 29.2474 29.5667C29.2474 25.5902 25.5549 22.3667 21.0001 22.3667C16.4452 22.3667 12.7528 25.5902 12.7528 29.5667C12.7528 33.5431 16.4452 36.7667 21.0001 36.7667Z" fill="#F1F1F1"></path>
+                                                                                <path d="M21.0002 37.3383C24.6483 37.3383 27.6057 34.3076 27.6057 30.569C27.6057 26.8305 24.6483 23.7998 21.0002 23.7998C17.3521 23.7998 14.3948 26.8305 14.3948 30.569C14.3948 34.3076 17.3521 37.3383 21.0002 37.3383Z" fill="#4285F4"></path>
+                                                                            </g>
+                                                                        </g>
+                                                                        <defs>
+                                                                            <clipPath id="i231">
+                                                                                <rect width="42" height="32" fill="white"></rect>
+                                                                            </clipPath>
+                                                                        </defs>
+                                                                    </svg>
+                                                                    <!--end::Icon-->
+                        
+                                                                    <!--begin::Info-->
+                                                                    <div class="ms-4">
+                                                                        <h3 class="dfs-3 fw-bold text-gray-900 mb-1">Chrome Web Store</h3>
+                                                                        <span class="fw-semibold fs-4 text-muted">Install extension</span>
+                                                                    </div>
+                                                                    <!--end::Info-->
+                                                                </a>
+                                                            </div>
+                                                            <!--end::Dropzone-->
+                                                        </div>
+                                                        <!--end::Input group-->
+                                                        
+                                                        <!--begin::Input group-->
+                                                        <div class="mb-10 fv-row fv-plugins-icon-container">
+                                                            <!--begin::Label-->
+                                                            <label class="required form-label mb-3 fw-bold">Your Sales Navigator session cookie</label>
+                                                            <!--end::Label-->
+                        
+                                                            <!--begin::Input-->
+                                                            <input type="text" class="form-control" name="session_cookie" placeholder="Paste your session cookie here" value="">
+                                                            <!--end::Input-->
+                                                            <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
+                                                            </div>
+                                                            <p>If you have PhantomBuster’s extension installed, just click on the "Connect to LinkedIn" button.
+                                                                Otherwise, you can find your cookie manually (the Sales Navigator cookie's name is "li_at").
+                                                            </p>
+                                                        </div>
+                                                        <!--end::Input group-->
+                    
+                                                        <!--begin::Input group-->
+                                                        <div class="m-0">
+                                                            <!--begin::Heading-->
+                                                            <div class="d-flex align-items-center collapsible py-3 toggle mb-0 collapsed" data-bs-toggle="collapse" data-bs-target="#kt_job_3_2" aria-expanded="false">
+                                                                <!--begin::Icon-->
+                                                                <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                                                    <i class="ki-duotone ki-minus-square toggle-on text-primary fs-1">
+                                                                        <span class="path1"></span>
+                                                                        <span class="path2"></span>
+                                                                    </i>                
+                                                                    <i class="ki-duotone ki-plus-square toggle-off fs-1">
+                                                                        <span class="path1"></span>
+                                                                        <span class="path2"></span>
+                                                                        <span class="path3"></span>
+                                                                    </i> 
+                                                                </div>
+                                                                <!--end::Icon-->
+                                                                
+                                                                <!--begin::Title-->
+                                                                <h4 class="text-gray-700 fw-bold cursor-pointer mb-0">                           
+                                                                    Advanced settings                           
+                                                                </h4>
+                                                                <!--end::Title-->
+                                                            </div>
+                                                            <!--end::Heading-->  
+                                                    
+                                                            <!--begin::Body-->
+                                                            <div id="kt_job_3_2" class="fs-6 ms-1 collapse" style="">
+                                                                <!--begin::Text-->
+                                                                <div class="mb-4 text-gray-600 fw-semibold fs-6">
+                                                                    <!--begin::Input group-->
+                                                                        <div class="mb-10 fv-row fv-plugins-icon-container">
+                                                                            <!--begin::Label-->
+                                                                            <label class="form-label mb-3 fw-bold">Your browser user agent (Optional)</label>
+                                                                            <p>Providing this information will help to limit detection from LinkedIn.</p>
+                                                                            <!--end::Label-->
+                                        
+                                                                            <!--begin::Input-->
+                                                                            <input type="text" class="form-control" name="browser_agent" placeholder="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/…" value="">
+                                                                            <!--end::Input-->
+                                                                            <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
+                                                                            </div>
+                                                                            <p>Must be obtained from the same browser as your LinkedIn session cookie.</p>
+                                                                        </div>
+                                                                        <!--end::Input group-->
+                                                                </div>
+                                                                <!--end::Text-->
+                                                            </div>                
+                                                            <!--end::Content-->
+                                                        </div>
+                                                        <!--end::Input group-->
+                                                    </div>
+                                                </div>
+                                                <!--end::Input group-->
+                                            </div>
+                                            <!--end::Wrapper-->
+                                        </div>
+                                        <!--end::Step 2-->
+
+                                        <!--begin::Step 3-->
+                                        <div data-kt-stepper-element="content">
+                                            <!--begin::Wrapper-->
+                                            <div class="w-100">
+                                                <!--begin::Heading-->
+                                                <div class="pb-10 pb-lg-12">
+                                                    <!--begin::Title-->
+                                                    <div class="dropzone d-flex align-items-center justify-content-center">
+                                                        <p style="margin: 0;">We recommend processing a maximum of 2500 results per working day.
+                                                            <a href="#">Learn more
+                                                                <i class="ki-duotone ki-exit-right-corner fs-2" style="color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1));">
+                                                                    <span class="path1"></span>
+                                                                    <span class="path2"></span>
+                                                                </i>
+                                                            </a>
+                                                        </p>
+                                                    </div>
+                                                    <!--end::Description-->
+                                                </div>
+                                                <!--end::Heading-->
+
+                                                <!--begin::Input group-->
+                                                <div class="mb-10 fv-row fv-plugins-icon-container">
+                                                    <!--begin::Label-->
+                                                    <label class="form-label mb-3 fw-bold">Results to export per search URL (Optional)</label>
+                                                    <!--end::Label-->
+                
+                                                    <!--begin::Input-->
+                                                    <input type="text" class="form-control" name="export_per_search" value="2500">
+                                                    <!--end::Input-->
+                                                    <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
+                                                    </div>
+                                                    <p>Sales Navigator only displays the first 2500 results of a people search, or 1000 of an account search. 
+                                                        To get more, alter the search query and <a href="#">use multiple search URLs.</a>
+                                                    </p>
+                                                </div>
+                                                <!--end::Input group-->
+
+                                                <!--begin::Input group-->
+                                                <div class="mb-10 fv-row fv-plugins-icon-container">
+                                                    <!--begin::Label-->
+                                                    <label class="form-label mb-3 fw-bold">Results to export per launch (Optional)</label>
+                                                    <!--end::Label-->
+                
+                                                    <!--begin::Input-->
+                                                    <input type="text" class="form-control" name="export_per_launch" value="2500">
+                                                    <!--end::Input-->
+                                                    <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
+                                                    </div>
+                                                    <p>If the Phantom does not scrape all of the results of one search during a launch, it will pick up from where it left off in the next launch.</p>
+                                                    <p>If left empty, the Phantom will scrape 2500 results by default.</p>
+                                                </div>
+                                                <!--end::Input group-->
+
+                                                <!--begin::Input group-->
+                                                <div class="m-0">
+                                                    <!--begin::Heading-->
+                                                    <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#kt_job_6_4">
+                                                        <!--begin::Icon-->
+                                                        <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                                            <i class="ki-duotone ki-minus-square toggle-on text-primary fs-1">
+                                                                <span class="path1"></span>
+                                                                <span class="path2"></span>
+                                                            </i>                
+                                                            <i class="ki-duotone ki-plus-square toggle-off fs-1">
+                                                                <span class="path1"></span>
+                                                                <span class="path2"></span>
+                                                                <span class="path3"></span>
+                                                            </i> 
+                                                        </div>
+                                                        <!--end::Icon-->
+                                                        
+                                                        <!--begin::Title-->
+                                                        <h4 class="text-gray-700 fw-bold cursor-pointer mb-0">                           
+                                                            Advanced behavior settings                          
+                                                        </h4>
+                                                        <!--end::Title-->
+                                                    </div>
+                                                    <!--end::Heading-->  
+                                            
+                                                    <!--begin::Input group-->
+                                                    <div id="kt_job_6_4" class="collapse  fs-6 ms-1">
+                                                        <!--begin::Text-->
+                                                        <div class="mb-4 text-gray-600 fw-semibold fs-6">
+                                                            <!--begin::Input group-->
+                                                            <div class="mb-10 fv-row fv-plugins-icon-container">
+                                                                <div class="form-check mb-5 mt-5">
+                                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                                    <label class="form-check-label text-black" for="flexCheckDefault">
+                                                                        Remove duplicate profiles between different searches    (Optional)
+                                                                    </label>
+                                                                </div>
+
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+                                                                    <label class="form-check-label text-black" for="flexCheckChecked">
+                                                                        Watcher mode    (Optional)
+                                                                    </label>
+                                                                    <p>Reprocess the same search URL during each launch to look for new results (only works with a single search as input).</p>
+                                                                </div>
+
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+                                                                    <label class="form-check-label text-black" for="flexCheckChecked">
+                                                                        Use your second Sales Navigator team instead of the first   (Optional)
+                                                                    </label>
+                                                                    <p>Only applicable if you're part of multiple Sales Navigator teams.</p>
+                                                                </div>
+                                                            </div>
+                                                            <!--end::Input group-->
+                                                        </div>
+                                                        <!--end::Text-->
+                                                    </div>                
+                                                    <!--begin::Input group-->
+                                                    
+                                                    <!--begin::Separator-->
+                                                    <div class="separator separator-dashed"></div>
+                                                    <!--end::Separator-->
+                                                </div>
+                                                <!--end::Input group-->
+
+                                                <!--begin::Input group-->
+                                                <div class="m-0">
+                                                    <!--begin::Heading-->
+                                                    <div class="d-flex align-items-center collapsible py-3 toggle mb-0 collapsed" data-bs-toggle="collapse" data-bs-target="#kt_job_6_2" aria-expanded="false">
+                                                        <!--begin::Icon-->
+                                                        <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                                            <i class="ki-duotone ki-minus-square toggle-on text-primary fs-1">
+                                                                <span class="path1"></span>
+                                                                <span class="path2"></span>
+                                                            </i>                
+                                                            <i class="ki-duotone ki-plus-square toggle-off fs-1">
+                                                                <span class="path1"></span>
+                                                                <span class="path2"></span>
+                                                                <span class="path3"></span>
+                                                            </i> 
+                                                        </div>
+                                                        <!--end::Icon-->
+                                                        
+                                                        <!--begin::Title-->
+                                                        <h4 class="text-gray-700 fw-bold cursor-pointer mb-0">                           
+                                                            Results file settings                       
+                                                        </h4>
+                                                        <!--end::Title-->
+                                                    </div>
+                                                    <!--end::Heading-->  
+                                            
+                                                    <!--begin::Input group-->
+                                                    <div id="kt_job_6_2" class="fs-6 ms-1 collapse" style="">
+                                                        <!--begin::Text-->
+                                                        <div class="mb-4 text-gray-600 fw-semibold fs-6">
+                                                            <div class="mb-10 fv-row fv-plugins-icon-container">
+                                                                <!--begin::Label-->
+                                                                <label class="form-label mb-3 fw-bold">Name your results file (Optional)</label>
+                                                                <!--end::Label-->
+                            
+                                                                <!--begin::Input-->
+                                                                <input type="text" class="form-control" name="name_results_file" placeholder="result" value="">
+                                                                <!--end::Input-->
+                                                                <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
+                                                                </div>
+                                                                <p>Take note: If you rename your results file at any point between launches, 
+                                                                    the Phantom will create a new results file and process your inputs from the start again.
+                                                                </p>
+                                                            </div>
+                                                            <div class="mb-10 fv-row fv-plugins-icon-container">
+                                                                <!--begin::Label-->
+                                                                <label class="form-label fw-bold mb-3">Fields to keep (Optional)</label>
+                                                                <!--end::Label-->
+                            
+                                                                <!--begin::Input-->
+                                                                <input type="text" class="form-control" name="fields_to_keep" value="">
+                                                                <!--end::Input-->
+                                                                <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
+                                                                <p>This will create a second CSV file with only the fields you want to keep.</p>
+                                                                <p>Enter those fields separated by a comma (e.g.: companyUrl, description, companyName).</p>
+                                                            </div>
+                                                        </div>
+                                                        <!--end::Text-->
+                                                    </div>                
+                                                    <!--begin::Input group-->
+                                                    
+                                                    <!--begin::Separator-->
+                                                    <div class="separator separator-dashed"></div>
+                                                    <!--end::Separator-->
+                                                </div>
+                                                <!--end::Input group-->
+                                            </div>
+                                            <!--end::Wrapper-->
+                                        </div>
+                                        <!--end::Step 3-->
+                                    </div>
+
+                                    <!--begin::Actions-->
+                                    <div class="d-flex flex-stack pt-5">
+                                        <!--begin::Wrapper-->
+                                        <div class="mr-2">
+                                            <button type="button" class="btn btn-lg btn-light-primary me-3"
+                                                data-kt-stepper-action="previous">
+                                                <i class="ki-duotone ki-arrow-left fs-4 me-1"><span class="path1"></span><span
+                                                        class="path2"></span></i> Back
+                                            </button>
+                                        </div>
+                                        <!--end::Wrapper-->
+
+                                        <!--begin::Wrapper-->
+                                        <div>
+                                            <button type="submit" class="btn btn-lg btn-primary me-3" data-kt-stepper-action="submit">
+                                                <span class="indicator-label">
+                                                    Submit
+                                                    <i class="ki-duotone ki-arrow-right fs-3 ms-2 me-0">
+                                                        <span class="path1"></span>
+                                                        <span class="path2"></span>
+                                                    </i> 
+                                                </span>
+                                                <span class="indicator-progress">
+                                                    Please wait... 
+                                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                                </span>
+                                            </button>
+
+                                            <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next">
+                                                Continue
+                                                <i class="ki-duotone ki-arrow-right fs-4 ms-1 me-0">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                </i> 
+                                            </button>
+                                        </div>
+                                        <!--end::Wrapper-->
+                                    </div>
+                                    <!--end::Actions-->
+                                </form>
+                                <!--end::Form-->
+                            {% else %}
+                                <p>Slots or durations are not available</p>
+                            {% endif %}
+                        {% else %}
+                            <p>No active package available</p>
+                        {% endif %}
+                    </div>
+                    <!--end::Content-->
+                </div>
+                <!--end::Stepper-->
+            </div>
+            <!--end::Content container-->
+        </div>
+        <!--end::Content-->
+
+    </div>
+    <!--end::Content wrapper-->
+
+    <!--begin::Footer-->
+    <div id="kt_app_footer" class="app-footer ">
+        <!--begin::Footer container-->
+        <div class="app-container  container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3 ">
+            <!--begin::Copyright-->
+            <div class="text-gray-900 order-2 order-md-1">
+                <span class="text-muted fw-semibold me-1">2024©</span>
+                <a href="{% url "home" %}" target="_blank" class="text-gray-800 text-hover-primary">{{website_details.website_name}}</a>
+            </div>
+            <!--end::Copyright-->
+
+            <!--begin::Menu-->
+            <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
+                <li class="menu-item"><a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
+                </li>
+
+                <li class="menu-item"><a href="https://devs.keenthemes.com" target="_blank"
+                        class="menu-link px-2">Support</a></li>
+
+                <li class="menu-item">
+                    <a href="https://themes.getbootstrap.com/product/keen-the-ultimate-bootstrap-admin-theme/" target="_blank" class="menu-link px-2">Purchase</a>
+                </li>
+            </ul>
+            <!--end::Menu-->
+        </div>
+        <!--end::Footer container-->
+    </div>
+    <!--end::Footer-->
+</div>
+<!--end:::Main-->
+{% endblock content %}
+{% block jscode %}
+<script src="{% static 'assets/js/custom/utilities/modals/create-account.js' %}"></script>
+{% endblock jscode %}

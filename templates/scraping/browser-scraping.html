@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block content %}
+<div class="app-main flex-column flex-row-fluid " id="kt_app_main">
+    <!--begin::Content wrapper-->
+    <div class="d-flex flex-column flex-column-fluid">
+        <!--begin::Toolbar-->
+        <div id="kt_app_toolbar" class="app-toolbar  py-3 py-lg-6 ">
+            <!--begin::Toolbar container-->
+            <div id="kt_app_toolbar_container" class="app-container  container-fluid d-flex flex-stack ">
+                <!--begin::Page title-->
+                <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3 ">
+                    <!--begin::Title-->
+                    <h1 class="page-heading text-gray-900 fw-bold fs-1"> Most popular use cases <span>- {{active_package.used_slots}} / {{active_package.scraping_slots}} Slots</span> </h1>
+                    <!--end::Title-->
+
+                    <p class="fs-5">Optimize your sales funnel with our ready-to-use Flows</p>
+                </div>
+                <!--end::Page title-->
+            </div>
+            <!--end::Toolbar container-->
+        </div>
+        <!--end::Toolbar-->
+
+        <!--begin::Content-->
+        <div id="kt_app_content" class="app-content  flex-column-fluid ">
+            <!--begin::Content container-->
+            <div id="kt_app_content_container" class="app-container  container-fluid ">
+                <!--begin::Row-->
+                <div class="row gx-5 gx-xl-10">
+                    {% for scraping_type in scraping_types %}
+                    <!--begin::Col-->
+                    <div class="col-xxl-4 mb-5 mb-xl-10">
+                        <!--begin::List widget 9-->
+                        <div class="card card-flush h-xl-100">
+                            <!--begin::Header-->
+                            <div class="card-header py-7">
+                                <!--begin::Statistics-->
+                                <div class="m-0">
+                                    <!--begin::Heading-->
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <!--begin::Title-->
+                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M10.9219 10.9688C10.3125 11.5312 10.3125 12.5156 10.9219 13.0781C11.4844 13.6875 12.4688 13.6875 13.0312 13.0781C13.6406 12.5156 13.6406 11.5312 13.0312 10.9688C12.4688 10.3594 11.4844 10.3594 10.9219 10.9688ZM12 0.375C5.57812 0.375 0.375 5.625 0.375 12C0.375 18.4219 5.57812 23.625 12 23.625C18.375 23.625 23.625 18.4219 23.625 12C23.625 5.625 18.375 0.375 12 0.375ZM17.9062 7.35938L14.8125 14.1094C14.625 14.4375 14.3906 14.6719 14.0625 14.8594L7.3125 17.9531C6.51562 18.2812 5.71875 17.4844 6.04688 16.6875L9.14062 9.9375C9.32812 9.60938 9.5625 9.375 9.89062 9.1875L16.6406 6.09375C17.4375 5.76562 18.2344 6.5625 17.9062 7.35938Z" fill="#0A66C2"></path></svg>
+                                        <!--end::Title-->
+                                    </div>
+                                    <!--end::Heading-->
+                                    <!--begin::Description-->
+                                    <button class="border border-secondary rounded bg-white">{{website_details.website_name}}</button>
+                                    <!--end::Description-->
+                                </div>
+                                <!--end::Statistics-->
+
+                                <!--begin::Statistics-->
+                                <div class="m-0">
+                                    <!--begin::Heading-->
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <!--begin::Title-->
+                                        <button class="border border-secondary rounded bg-primary text-white">{{scraping_type.slot}}</button>
+                                        <!--end::Title-->
+                                    </div>
+                                    <!--end::Heading-->
+                                </div>
+                                <!--end::Statistics-->
+                            </div>
+                            <!--end::Header-->
+
+                            <!--begin::Body-->
+                            <div class="card-body card-body d-flex justify-content-between flex-column pt-3">
+                                <!--begin::Title-->
+                                <p class="fs-2 text-gray-900 fw-bold lh-base pt-2">{{scraping_type.heading}}</p>
+                                <!--end::Title-->
+
+                                <!--begin::Text-->
+                                <div class="fw-semibold fs-5 text-gray-600 pt-3 mb-5">{{scraping_type.short_description}}</div>
+                                <!--end::Text-->
+
+                                <a href="{% url "scraping_blog" slug=scraping_type.slug %}" class="fs-5">Learn More <i class="ki-duotone ki-black-right text-primary"></i></a>
+
+                                <!--begin::Footer-->
+                                <div class="d-flex justify-content-center align-items-center flex-stack flex-wrap pt-4 gap-2">
+                                    <!--begin::Action-->
+                                    {% if active_package %}
+                                        {% if active_package.scraping_slots|subtract:active_package.used_slots >= scraping_type.slot|first|to_integer and total_seconds > 30 %}
+                                            <a href="{% url "scraping_setup" slug=scraping_type.slug %}" class="btn btn-sm btn-primary fs-5 rounded-pill">Start Scraping</a>
+                                        {% else %}
+                                            <button class="btn btn-sm btn-primary fs-5 rounded-pill" title="Slots or durations are not available">Start Scraping</button>
+                                        {% endif %}
+                                    {% else %}
+                                        <button class="btn btn-sm btn-primary fs-5 rounded-pill" title="No active package available">Start Scraping</button>
+                                    {% endif %}
+                                    <!--end::Action-->
+                                </div>
+                                <!--end::Footer-->
+                            </div>
+                            <!--end::Body-->
+                        </div>
+                        <!--end::List widget 9-->
+                    </div>
+                    <!--end::Col-->
+                    {% endfor %}
+                </div>
+                <!--end::Row-->
+            </div>
+            <!--end::Content container-->
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Content wrapper-->
+
+    <!--begin::Footer-->
+    <div id="kt_app_footer" class="app-footer ">
+        <!--begin::Footer container-->
+        <div class="app-container  container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3 ">
+            <!--begin::Copyright-->
+            <div class="text-gray-900 order-2 order-md-1">
+                <span class="text-muted fw-semibold me-1">2024©</span>
+                <a href="{% url "home" %}" target="_blank" class="text-gray-800 text-hover-primary">{{website_details.website_name}}</a>
+            </div>
+            <!--end::Copyright-->
+
+            <!--begin::Menu-->
+            <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
+                <li class="menu-item"><a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
+                </li>
+
+                <li class="menu-item"><a href="https://devs.keenthemes.com" target="_blank"
+                        class="menu-link px-2">Support</a></li>
+
+                <li class="menu-item"><a
+                        href="https://themes.getbootstrap.com/product/keen-the-ultimate-bootstrap-admin-theme/"
+                        target="_blank" class="menu-link px-2">Purchase</a></li>
+            </ul>
+            <!--end::Menu-->
+        </div>
+        <!--end::Footer container-->
+    </div>
+    <!--end::Footer-->
+</div>
+{% endblock content %}

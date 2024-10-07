@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<!--begin::Main-->
+<div class="app-main flex-column flex-row-fluid " id="kt_app_main">
+    <!--begin::Content wrapper-->
+    <div class="d-flex flex-column flex-column-fluid">
+        <!--begin::Content-->
+        <div id="kt_app_content" class="app-content  flex-column-fluid ">
+            <!--begin::Content container-->
+            <div id="kt_app_content_container" class="app-container  container-xxl ">
+                <!--begin::Body-->
+                <div class="card-body p-lg-10 pb-lg-0">
+                    <!--begin::Layout-->
+                    <div class="d-flex flex-column flex-xl-row">
+                        <!--begin::Content-->
+                        <div class="flex-lg-row-fluid me-xl-15">
+                            <div class="mb-17">
+                                <div class="p-0">
+                                    <h1 class="fw-bold text-gray-900 mb-3 fs-2hx lh-sm">
+                                        How To Increase Filtered Leads Rate?
+                                    </h1>
+                                    <div class="fs-5 fw-semibold text-gray-600 mt-4">
+                                        <h2 class="mb-4 text-black">What are Filtered Leads?</h2>
+                                        <p class="mb-4 text-light-black">
+                                            Filtered leads are leads that have been verified by the Evaboot filtering algorithm.
+                                        </p>
+                        
+                                        <img src="https://evaboot.intercom-attachments-1.com/i/o/1182902902/bc551d110e711a2cbad8adc3/cleanshot-2024-03-05-at-102231_1e5gxl1.png?expires=1727463600&signature=3d129b755046e97a6ba40ee5745dc642f3a89549c37721ada2f98bea5e53f0e0&req=dSEvFMB%2Bn4hfW%2FMW1HO4zYz%2FyAXu4gzd0cXpXc%2Fum%2F2syeiR%2BLAm3i9aKXg8%0AECA%2Bl5vMUUJx5yp%2Bnwc%3D%0A" alt="Evaboot Filtering Algorithm" class="img-fluid mb-4" style="max-width: 100%; height: auto;">
+                        
+                                        <p class="mb-4 text-light-black">
+                                            Each time you export leads, Evaboot verifies if they match the filters applied during your LinkedIn Sales Navigator search.
+                                        </p>
+                                        
+                                        <p class="mb-4 text-light-black">
+                                            The first column of the export file indicates whether the lead matches your search criteria.
+                                        </p>
+                        
+                                        <p class="mb-4 text-light-black">
+                                            The second column provides reasons for any leads marked as NO MATCH*.
+                                        </p>
+                        
+                                        <p class="mb-4 text-light-black">
+                                            Typically, 20% to 30% of leads do not align with the original search filters.
+                                        </p>
+                        
+                                        <p class="mb-4 text-light-black">
+                                            You can choose to download all leads or only those marked as filtered for each export.
+                                        </p>
+                        
+                                        <h2 class="mb-4">How To Increase Filtered Leads Rate?</h2>
+                                        
+                                        <p class="mb-4 text-light-black">
+                                            A low filtered lead rate is often not your fault; Sales Navigator has its limitations.
+                                        </p>
+                        
+                                        <p class="mb-4 text-light-black">
+                                            To understand these issues and how to mitigate them, we've created a comprehensive tutorial on using Sales Navigator:
+                                        </p>
+
+                                        <div class="mb-4">
+                                            <iframe width="100%" height="500" src="https://www.youtube.com/embed/ocwSGZ-sVuc?si=C8C2k2TvQ6F7SLuj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="max-width: 100%;"></iframe>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                        
+                        <!--end::Layout-->
+                    </div>
+                </div>
+                <!--end::Post card-->
+            </div>
+            <!--end::Content-->
+        </div>
+        <!--end::Content wrapper-->
+        <!--begin::Footer-->
+        <div id="kt_app_footer" class="app-footer ">
+            <!--begin::Footer container-->
+            <div class="app-container  container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3 ">
+                <!--begin::Copyright-->
+                <div class="text-gray-900 order-2 order-md-1">
+                    <span class="text-muted fw-semibold me-1">2024©</span>
+                    <a href="{% url "home" %}" target="_blank" class="text-gray-800 text-hover-primary">{{website_details.website_name}}</a>
+                </div>
+                <!--end::Copyright-->
+
+                <!--begin::Menu-->
+                <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
+                    <li class="menu-item"><a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a></li>
+                    <li class="menu-item"><a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Support</a></li>
+                    <li class="menu-item"><a href="https://themes.getbootstrap.com/product/keen-the-ultimate-bootstrap-admin-theme/" target="_blank" class="menu-link px-2">Purchase</a></li>
+                </ul>
+                <!--end::Menu-->
+            </div>
+            <!--end::Footer container-->
+        </div>
+        <!--end::Footer-->
+    </div>
+    <!--end:::Main-->
+</div>
+<!--end::Wrapper-->
+{% endblock content %}

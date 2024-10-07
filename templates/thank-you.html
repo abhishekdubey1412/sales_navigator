@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="text-center">
+            <img src="{% static 'assets/media/thank-you-icon.webp' %}" alt="Thank You Icon" class="mb-4" style="width: 90%;">
+            <p class="lead">Thank you for reaching out to us. We have received your message and will get back to you shortly. 
+                <br>If you have any urgent inquiries, please email <a href="mailto:support@example.com">support@example.com</a>.</p>
+        </div>
+    </div>
+{% endblock content %}

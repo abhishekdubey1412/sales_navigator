@@ -1,0 +1,247 @@
+{% extends "user-profile/base.html" %}
+{% load static %}
+{% block userContent %}
+<!--begin::Login sessions-->
+<div class="card mb-5 mb-lg-10" data-select2-id="select2-data-135-9c99">
+    <!--begin::Card header-->
+    <div class="card-header" data-select2-id="select2-data-134-ivcb">
+        <!--begin::Heading-->
+        <div class="card-title">
+            <h3>Login Sessions</h3>
+        </div>
+        <!--end::Heading-->
+    </div>
+    <!--end::Card header-->
+
+    <!--begin::Card body-->
+    <div class="card-body p-0">
+        <!--begin::Table wrapper-->
+        <div class="table-responsive">
+            <!--begin::Table-->
+            <table class="table align-middle table-row-bordered table-row-solid gy-4 gs-9">
+                <!--begin::Thead-->
+                <thead class="border-gray-200 fs-5 fw-semibold bg-lighten">
+                    <tr>
+                        <th class="min-w-250px">Location</th>
+                        <th class="min-w-100px">Status</th>
+                        <th class="min-w-150px">Device</th>
+                        <th class="min-w-150px">IP Address</th>
+                        <th class="min-w-150px">Time</th>
+                    </tr>
+                </thead>
+                <!--end::Thead-->
+
+                <!--begin::Tbody-->
+                <tbody class="fw-6 fw-semibold text-gray-600">
+                    {% for session in sessions %}
+                        <tr>
+                            <td>
+                                <a href="#" class="text-hover-primary text-gray-600">{{session.city}}</a>
+                            </td>
+                            
+                            <td>
+                                <span class="badge badge-light-success fs-7 fw-bold">{{session.status}}</span>
+                            </td>
+
+                            <td>{{session.device}}</td>
+
+                            <td>{{session.ip_address}}</td>
+                            
+                            <td>{{session.timestamp}}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="text-center" colspan="5">No login sessions found.</td>
+                        </tr>
+                    {% endfor %}           
+                </tbody>
+                <!--end::Tbody-->
+            </table>
+            <!--end::Table-->
+        </div>
+        <!--end::Table wrapper-->
+    </div>
+    <!--end::Card body-->
+</div>
+<!--end::Login sessions-->
+
+<!--begin::Card-->
+<div class="card pt-4 ">
+    <!--begin::Card header-->
+    <div class="card-header border-0">
+        <!--begin::Card title-->
+        <div class="card-title">
+            <h2>Logs</h2>
+        </div>
+        <!--end::Card title-->
+    </div>
+    <!--end::Card header-->
+
+    <!--begin::Card body-->
+    <div class="card-body py-0">
+        <!--begin::Table wrapper-->
+        <div class="table-responsive">
+            <!--begin::Table-->
+            <table class="table align-middle table-row-dashed fw-semibold text-gray-600 fs-6 gy-5" id="kt_table_customers_logs">
+                <!--begin::Table body-->
+                <tbody>
+                    {% for entry in log_entries %}
+                    <!--begin::Table row-->
+                    <tr>
+                        <!--begin::Badge-->
+                        <td class="min-w-70px">
+                            <div class="badge badge-light-success">{{ entry.status_code }}</div>
+                        </td>
+                        <!--end::Badge-->
+
+                        <!--begin::Status-->
+                        <td>{{ entry.path }}</td>
+                        <!--end::Status-->
+
+                        <!--begin::Timestamp-->
+                        <td class="pe-0 text-end min-w-200px"> {{ entry.timestamp }} </td>
+                        <!--end::Timestamp-->
+                    </tr>
+                    <!--end::Table row-->
+                    {% empty %}
+                        <tr>
+                            <td class="text-center" colspan="5">No login sessions found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <!--end::Table body-->
+            </table>
+            <!--end::Table-->
+        </div>
+        <!--end::Table wrapper-->
+        <div id="" class="row">
+            <div id="" class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start dt-toolbar">
+            </div>
+            <div id="" class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
+                <div class="dt-paging paging_simple_numbers">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="dt-paging-button page-item disabled">
+                                <button class="page-link previous" role="link" type="button" aria-controls="kt_customers_table" aria-disabled="true" aria-label="Previous" data-dt-idx="previous" tabindex="-1">
+                                    <i class="previous"></i>
+                                </button>
+                            </li>
+                            <li class="dt-paging-button page-item active">
+                                <button class="page-link" role="link" type="button" aria-controls="kt_customers_table" aria-current="page" data-dt-idx="0">1</button>
+                            </li>
+                            <li class="dt-paging-button page-item">
+                                <button class="page-link next" role="link" type="button" aria-controls="kt_customers_table" aria-label="Next" data-dt-idx="next">
+                                    <i class="next"></i>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end::Card body-->
+</div>
+<!--end::Card-->
+{% endblock userContent %}
+{% block jscode %}
+<script>
+    // Get the first tbody element
+    const tbodies = document.getElementsByTagName('tbody')[1];
+
+    // Get all tr elements within the tbody
+    const trs = tbodies.getElementsByTagName('tr');
+
+    // Set pagination parameters
+    const rowsPerPage = 10;
+    const totalRows = trs.length;
+    const totalPages = Math.ceil(totalRows / rowsPerPage);
+    let currentPage = 1;
+
+    // Function to display rows for the current page
+    function displayPage(page) {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        // Hide all rows
+        for (let i = 0; i < totalRows; i++) {
+            trs[i].style.display = 'none';
+        }
+
+        // Show rows for the current page
+        for (let i = start; i < end && i < totalRows; i++) {
+            trs[i].style.display = '';
+        }
+
+        updatePagination();
+    }
+
+    // Function to create/update pagination controls
+    function updatePagination() {
+        const paginationContainer = document.querySelector('.pagination');
+        paginationContainer.innerHTML = ''; // Clear existing controls
+
+        // Create previous button
+        const prevButton = document.createElement('li');
+        prevButton.className = 'dt-paging-button page-item ' + (currentPage === 1 ? 'disabled' : '');
+        prevButton.innerHTML = `<button class="page-link previous" type="button" aria-label="Previous" onclick="changePage(${currentPage - 1})">
+                                    <i class="previous"></i>
+                                </button>`;
+        paginationContainer.appendChild(prevButton);
+
+        const maxPagesToShow = 3; // How many page buttons to show at a time (including ellipsis)
+        const surroundingPages = 1; // Pages to show around the current page
+
+        // Start and end page numbers for the range to display
+        let startPage = Math.max(1, currentPage - surroundingPages);
+        let endPage = Math.min(totalPages, currentPage + surroundingPages);
+
+        // Add first page and "..."
+        if (startPage > 2) {
+            paginationContainer.innerHTML += `<li class="dt-paging-button page-item"><button class="page-link" type="button" onclick="changePage(1)">1</button></li>`;
+            paginationContainer.innerHTML += `<li class="dt-paging-button page-item"><span class="page-link">...</span></li>`;
+        }
+
+        // Add pages from startPage to endPage (around the active page)
+        for (let i = startPage; i <= endPage; i++) {
+            const pageButton = document.createElement('li');
+            pageButton.className = 'dt-paging-button page-item ' + (i === currentPage ? 'active' : '');
+            pageButton.innerHTML = `<button class="page-link" type="button" onclick="changePage(${i})">${i}</button>`;
+            paginationContainer.appendChild(pageButton);
+        }
+
+        // Add "..." and last page
+        if (endPage < totalPages - 1) {
+            paginationContainer.innerHTML += `<li class="dt-paging-button page-item"><span class="page-link">...</span></li>`;
+        }
+        if (endPage < totalPages) {
+            paginationContainer.innerHTML += `<li class="dt-paging-button page-item"><button class="page-link" type="button" onclick="changePage(${totalPages})">${totalPages}</button></li>`;
+        }
+
+        // Create next button
+        const nextButton = document.createElement('li');
+        nextButton.className = 'dt-paging-button page-item ' + (currentPage === totalPages ? 'disabled' : '');
+        nextButton.innerHTML = `<button class="page-link next" type="button" aria-label="Next" onclick="changePage(${currentPage + 1})">
+                                    <i class="next"></i>
+                                </button>`;
+        paginationContainer.appendChild(nextButton);
+    }
+
+    // Function to change page
+    function changePage(page) {
+        if (page < 1 || page > totalPages) return; // Prevent going out of bounds
+        currentPage = page;
+        displayPage(currentPage);
+    }
+
+    // Initial display
+    if (totalRows > rowsPerPage) {
+        displayPage(currentPage);
+    } else {
+        // Show all rows if less than or equal to 10
+        for (let i = 0; i < totalRows; i++) {
+            trs[i].style.display = '';
+        }
+    }
+</script>
+{% endblock jscode %}
