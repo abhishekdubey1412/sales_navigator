@@ -2,7 +2,7 @@
 {% load static %}
 {% block userContent %}
 <!--begin::Statements-->
-<div class="card  ">
+<div class="card">
     <!--begin::Header-->
     <div class="card-header card-header-stretch">
         <!--begin::Title-->
@@ -10,371 +10,44 @@
             <h3 class="m-0 text-gray-800">Statement</h3>
         </div>
         <!--end::Title-->
-
-        <!--begin::Toolbar-->
-        <div class="card-toolbar m-0">
-            <!--begin::Tab nav-->
-            <ul class="nav nav-stretch fs-5 fw-semibold nav-line-tabs border-transparent" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <a id="kt_referrals_year_tab" class="nav-link text-active-gray-800 active" data-bs-toggle="tab"
-                        role="tab" href="#kt_referrals_1" aria-selected="true">
-                        This Year
-                    </a>
-                </li>
-
-                <li class="nav-item" role="presentation">
-                    <a id="kt_referrals_2019_tab" class="nav-link text-active-gray-800 me-4" data-bs-toggle="tab"
-                        role="tab" href="#kt_referrals_2" aria-selected="false" tabindex="-1">
-                        2023 </a>
-                </li>
-
-                <li class="nav-item" role="presentation">
-                    <a id="kt_referrals_2018_tab" class="nav-link text-active-gray-800 me-4" data-bs-toggle="tab"
-                        role="tab" href="#kt_referrals_3" aria-selected="false" tabindex="-1">
-                        2022 </a>
-                </li>
-
-                <li class="nav-item" role="presentation">
-                    <a id="kt_referrals_2017_tab" class="nav-link text-active-gray-800 ms-8" data-bs-toggle="tab"
-                        role="tab" href="#kt_referrals_4" aria-selected="false" tabindex="-1">
-                        2021 </a>
-                </li>
-            </ul>
-            <!--end::Tab nav-->
-        </div>
-        <!--end::Toolbar-->
     </div>
     <!--end::Header-->
 
-    <!--begin::Tab Content-->
-    <div id="kt_referred_users_tab_content" class="tab-content">
-        <!--begin::Tab panel-->
-        <div id="kt_referrals_1" class="card-body p-0 tab-pane fade show active" role="tabpanel"
-            aria-labelledby="kt_referrals_year_tab">
-            <div class="table-responsive">
-                <!--begin::Table-->
-                <table class="table align-middle table-row-bordered table-row-solid gy-4 gs-9">
-                    <!--begin::Thead-->
-                    <thead class="border-gray-200 fs-5 fw-semibold bg-lighten">
-                        <tr>
-                            <th class="min-w-175px ps-9">Date</th>
-                            <th class="min-w-150px px-0">Order ID</th>
-                            <th class="min-w-350px">Details</th>
-                            <th class="min-w-125px">Credit</th>
-                        </tr>
-                    </thead>
-                    <!--end::Thead-->
+    <!--begin::Table-->
+    <div class="table-responsive">
+        <table class="table align-middle table-row-bordered table-row-solid gy-4 gs-9">
+            <!--begin::Thead-->
+            <thead class="border-gray-200 fs-5 fw-semibold bg-lighten">
+                <tr>
+                    <th class="min-w-175px ps-9">Date</th>
+                    <th class="min-w-150px px-0">Order ID</th>
+                    <th class="min-w-350px">Details</th>
+                    <th class="min-w-125px">Credit</th>
+                </tr>
+            </thead>
+            <!--end::Thead-->
 
-                    <!--begin::Tbody-->
-                    <tbody class="fs-6 fw-semibold text-gray-600">
-                        <tr>
-                            <td class="ps-9">Nov 01, 2020</td>
-                            <td class="ps-0">102445788</td>
-                            <td>Darknight transparency 36 Icons Pack</td>
-                            <td class="text-success">$38.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Oct 24, 2020</td>
-                            <td class="ps-0">423445721</td>
-                            <td>Seller Fee</td>
-                            <td class="text-danger">$-2.60</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Oct 08, 2020</td>
-                            <td class="ps-0">312445984</td>
-                            <td>Cartoon Mobile Emoji Phone Pack</td>
-                            <td class="text-success">$76.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Sep 15, 2020</td>
-                            <td class="ps-0">312445984</td>
-                            <td>Iphone 12 Pro Mockup Mega Bundle</td>
-                            <td class="text-success">$5.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">May 30, 2020</td>
-                            <td class="ps-0">523445943</td>
-                            <td>Seller Fee</td>
-                            <td class="text-danger">$-1.30</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Apr 22, 2020</td>
-                            <td class="ps-0">231445943</td>
-                            <td>Parcel Shipping / Delivery Service App</td>
-                            <td class="text-success">$204.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Feb 09, 2020</td>
-                            <td class="ps-0">426445943</td>
-                            <td>Visual Design Illustration</td>
-                            <td class="text-success">$31.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Nov 01, 2020</td>
-                            <td class="ps-0">984445943</td>
-                            <td>Abstract Vusial Pack</td>
-                            <td class="text-success">$52.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Jan 04, 2020</td>
-                            <td class="ps-0">324442313</td>
-                            <td>Seller Fee</td>
-                            <td class="text-danger">$-0.80</td>
-                        </tr>
-
-                    </tbody>
-                    <!--end::Tbody-->
-                </table>
-                <!--end::Table-->
-            </div>
-        </div>
-        <!--end::Tab panel-->
-        <!--begin::Tab panel-->
-        <div id="kt_referrals_2" class="card-body p-0 tab-pane fade " role="tabpanel"
-            aria-labelledby="kt_referrals_2019_tab">
-            <div class="table-responsive">
-                <!--begin::Table-->
-                <table class="table align-middle table-row-bordered table-row-solid gy-4 gs-9">
-                    <!--begin::Thead-->
-                    <thead class="border-gray-200 fs-5 fw-semibold bg-lighten">
-                        <tr>
-                            <th class="min-w-175px ps-9">Date</th>
-                            <th class="min-w-150px px-0">Order ID</th>
-                            <th class="min-w-350px">Details</th>
-                            <th class="min-w-125px">Credit</th>
-                        </tr>
-                    </thead>
-                    <!--end::Thead-->
-
-                    <!--begin::Tbody-->
-                    <tbody class="fs-6 fw-semibold text-gray-600">
-                        <tr>
-                            <td class="ps-9">May 30, 2020</td>
-                            <td class="ps-0">523445943</td>
-                            <td>Seller Fee</td>
-                            <td class="text-danger">$-1.30</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Apr 22, 2020</td>
-                            <td class="ps-0">231445943</td>
-                            <td>Parcel Shipping / Delivery Service App</td>
-                            <td class="text-success">$204.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Feb 09, 2020</td>
-                            <td class="ps-0">426445943</td>
-                            <td>Visual Design Illustration</td>
-                            <td class="text-success">$31.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Nov 01, 2020</td>
-                            <td class="ps-0">984445943</td>
-                            <td>Abstract Vusial Pack</td>
-                            <td class="text-success">$52.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Jan 04, 2020</td>
-                            <td class="ps-0">324442313</td>
-                            <td>Seller Fee</td>
-                            <td class="text-danger">$-0.80</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Nov 01, 2020</td>
-                            <td class="ps-0">102445788</td>
-                            <td>Darknight transparency 36 Icons Pack</td>
-                            <td class="text-success">$38.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Oct 24, 2020</td>
-                            <td class="ps-0">423445721</td>
-                            <td>Seller Fee</td>
-                            <td class="text-danger">$-2.60</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Oct 08, 2020</td>
-                            <td class="ps-0">312445984</td>
-                            <td>Cartoon Mobile Emoji Phone Pack</td>
-                            <td class="text-success">$76.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Sep 15, 2020</td>
-                            <td class="ps-0">312445984</td>
-                            <td>Iphone 12 Pro Mockup Mega Bundle</td>
-                            <td class="text-success">$5.00</td>
-                        </tr>
-
-                    </tbody>
-                    <!--end::Tbody-->
-                </table>
-                <!--end::Table-->
-            </div>
-        </div>
-        <!--end::Tab panel-->
-        <!--begin::Tab panel-->
-        <div id="kt_referrals_3" class="card-body p-0 tab-pane fade " role="tabpanel"
-            aria-labelledby="kt_referrals_2018_tab">
-            <div class="table-responsive">
-                <!--begin::Table-->
-                <table class="table align-middle table-row-bordered table-row-solid gy-4 gs-9">
-                    <!--begin::Thead-->
-                    <thead class="border-gray-200 fs-5 fw-semibold bg-lighten">
-                        <tr>
-                            <th class="min-w-175px ps-9">Date</th>
-                            <th class="min-w-150px px-0">Order ID</th>
-                            <th class="min-w-350px">Details</th>
-                            <th class="min-w-125px">Credit</th>
-                        </tr>
-                    </thead>
-                    <!--end::Thead-->
-
-                    <!--begin::Tbody-->
-                    <tbody class="fs-6 fw-semibold text-gray-600">
-                        <tr>
-                            <td class="ps-9">Feb 09, 2020</td>
-                            <td class="ps-0">426445943</td>
-                            <td>Visual Design Illustration</td>
-                            <td class="text-success">$31.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Nov 01, 2020</td>
-                            <td class="ps-0">984445943</td>
-                            <td>Abstract Vusial Pack</td>
-                            <td class="text-success">$52.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Jan 04, 2020</td>
-                            <td class="ps-0">324442313</td>
-                            <td>Seller Fee</td>
-                            <td class="text-danger">$-0.80</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Sep 15, 2020</td>
-                            <td class="ps-0">312445984</td>
-                            <td>Iphone 12 Pro Mockup Mega Bundle</td>
-                            <td class="text-success">$5.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Nov 01, 2020</td>
-                            <td class="ps-0">102445788</td>
-                            <td>Darknight transparency 36 Icons Pack</td>
-                            <td class="text-success">$38.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Oct 24, 2020</td>
-                            <td class="ps-0">423445721</td>
-                            <td>Seller Fee</td>
-                            <td class="text-danger">$-2.60</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Oct 08, 2020</td>
-                            <td class="ps-0">312445984</td>
-                            <td>Cartoon Mobile Emoji Phone Pack</td>
-                            <td class="text-success">$76.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">May 30, 2020</td>
-                            <td class="ps-0">523445943</td>
-                            <td>Seller Fee</td>
-                            <td class="text-danger">$-1.30</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Apr 22, 2020</td>
-                            <td class="ps-0">231445943</td>
-                            <td>Parcel Shipping / Delivery Service App</td>
-                            <td class="text-success">$204.00</td>
-                        </tr>
-
-                    </tbody>
-                    <!--end::Tbody-->
-                </table>
-                <!--end::Table-->
-            </div>
-        </div>
-        <!--end::Tab panel-->
-        <!--begin::Tab panel-->
-        <div id="kt_referrals_4" class="card-body p-0 tab-pane fade " role="tabpanel"
-            aria-labelledby="kt_referrals_2017_tab">
-            <div class="table-responsive">
-                <!--begin::Table-->
-                <table class="table align-middle table-row-bordered table-row-solid gy-4 gs-9">
-                    <!--begin::Thead-->
-                    <thead class="border-gray-200 fs-5 fw-semibold bg-lighten">
-                        <tr>
-                            <th class="min-w-175px ps-9">Date</th>
-                            <th class="min-w-150px px-0">Order ID</th>
-                            <th class="min-w-350px">Details</th>
-                            <th class="min-w-125px">Credit</th>
-                        </tr>
-                    </thead>
-                    <!--end::Thead-->
-
-                    <!--begin::Tbody-->
-                    <tbody class="fs-6 fw-semibold text-gray-600">
-                        <tr>
-                            <td class="ps-9">Nov 01, 2020</td>
-                            <td class="ps-0">102445788</td>
-                            <td>Darknight transparency 36 Icons Pack</td>
-                            <td class="text-success">$38.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Oct 24, 2020</td>
-                            <td class="ps-0">423445721</td>
-                            <td>Seller Fee</td>
-                            <td class="text-danger">$-2.60</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Nov 01, 2020</td>
-                            <td class="ps-0">102445788</td>
-                            <td>Darknight transparency 36 Icons Pack</td>
-                            <td class="text-success">$38.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Oct 24, 2020</td>
-                            <td class="ps-0">423445721</td>
-                            <td>Seller Fee</td>
-                            <td class="text-danger">$-2.60</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Feb 09, 2020</td>
-                            <td class="ps-0">426445943</td>
-                            <td>Visual Design Illustration</td>
-                            <td class="text-success">$31.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Nov 01, 2020</td>
-                            <td class="ps-0">984445943</td>
-                            <td>Abstract Vusial Pack</td>
-                            <td class="text-success">$52.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Jan 04, 2020</td>
-                            <td class="ps-0">324442313</td>
-                            <td>Seller Fee</td>
-                            <td class="text-danger">$-0.80</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Oct 08, 2020</td>
-                            <td class="ps-0">312445984</td>
-                            <td>Cartoon Mobile Emoji Phone Pack</td>
-                            <td class="text-success">$76.00</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-9">Oct 08, 2020</td>
-                            <td class="ps-0">312445984</td>
-                            <td>Cartoon Mobile Emoji Phone Pack</td>
-                            <td class="text-success">$76.00</td>
-                        </tr>
-
-                    </tbody>
-                    <!--end::Tbody-->
-                </table>
-                <!--end::Table-->
-            </div>
-        </div>
-        <!--end::Tab panel-->
-
+            <!--begin::Tbody-->
+            <tbody class="fs-6 fw-semibold text-gray-600">
+                {% if statements %}
+                    {% for statement in statements %}
+                    <tr>
+                        <td class="ps-9">{{ statement.date }}</td>
+                        <td class="ps-0">{{ statement.order_id }}</td>
+                        <td>{{ statement.details }}</td>
+                        <td class="text-danger">- {{ statement.credit }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">No statements available.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+            <!--end::Tbody-->
+        </table>
     </div>
-    <!--end::Tab Content-->
+    <!--end::Table-->
 </div>
 <!--end::Statements-->
 {% endblock userContent %}

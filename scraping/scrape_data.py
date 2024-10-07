@@ -4,6 +4,8 @@ import pickle
 import logging
 from selenium import webdriver
 from django.utils import timezone
+from users.models import UserProfile
+from billing.models import Statement
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -135,6 +137,17 @@ def update_scraping_info(driver, scraping_info_id, status, active_package):
         if active_package:
             active_package.execution_time_hours = timezone.timedelta(seconds=active_package.execution_time_hours.total_seconds() - duration.total_seconds())
             active_package.save()
+
+        try:
+            Statement.objects.create(
+                user=UserProfile.objects.get(email=scraping_info.email),
+                date=timezone.now(),
+                order_id=scraping_info.scraping_id,
+                details=f'Scraping duration for {scraping_info.scraping_name}',
+                credit=formatted_duration
+            )
+        except Exception as e:
+            print(f"An error occurred while creating the statement: {e}")
 
     except ScrapingInfo.DoesNotExist:
         logging.error(f"ScrapingInfo with id {scraping_info_id} does not exist.")

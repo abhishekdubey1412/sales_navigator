@@ -2,6 +2,7 @@ from .models import UserProfile
 from django.utils import timezone
 from django.contrib import messages
 from django.http import JsonResponse
+from billing.models import Statement
 from core.models import WebsiteDetails
 from scraping.models import ScrapingType
 from billing.models import BillingHistory
@@ -39,7 +40,7 @@ def update_profile(request):
             user.profile_image = request.FILES['avatar']
         user.first_name = request.POST.get('fname')
         user.last_name = request.POST.get('lname')
-        user.phone = request.POST.get('phone')
+        user.mobile_no = request.POST.get('phone')
         user.company_name = request.POST.get('company_name')
         user.tax_id = request.POST.get('TaxID')
         user.address = request.POST.get('address')
@@ -107,7 +108,11 @@ def billing(request):
 
 @login_required(login_url='sign_in')
 def statements(request):
-    return render(request, 'user-profile/statements.html', get_common_context(request))
+    context = get_common_context(request)
+    context.update({
+        'statements': Statement.objects.filter(user=request.user).order_by('-date')
+    })
+    return render(request, 'user-profile/statements.html', context)
 
 @login_required(login_url='sign_in')
 def api_keys(request):

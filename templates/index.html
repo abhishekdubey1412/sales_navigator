@@ -220,7 +220,7 @@
                                                     <a href="{% url "launch" scraping_info.scraping_id %}" class="text-gray-800 text-hover-primary mb-1">{{scraping_info.scraping_name}}</a>
                                                 </td>
                                                 <td>
-                                                    <div class="badge badge-light-{% if scraping_info.status == 'in_process' %}info{% elif scraping_info.status == 'completed' %}success{% else %}danger{% endif %}" aria-label="Status: {{scraping_info.status}}">{{scraping_info.status}}</div>
+                                                    <div class="badge badge-light-{% if scraping_info.status == 'in_process' %}info{% elif scraping_info.status == 'completed' %}success{% else %}danger{% endif %}" aria-label="Status: {{scraping_info.status}}">{% if scraping_info.status == 'in_process' %}In Progress{% elif scraping_info.status == 'completed' %}Completed{% else %}Failed{% endif %}</div>
                                                 </td>
                                                 <td>
                                                     {{scraping_info.duration}}
