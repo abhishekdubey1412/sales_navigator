@@ -34,7 +34,8 @@
                     <div class="card bg-body flex-row-fluid mb-9 mb-xl-0 me-xl-9">
                         <div class="card-body">
                             <!--begin::Form-->
-                            <form action="" class="form mb-15" method="post" id="kt_contact_form">
+                            <form action="{% url "contact" %}" class="form mb-15" method="post" id="kt_contact_form">
+                                {% csrf_token %}
                                 <!--begin::Title-->
                                 <div class="d-flex flex-column mb-9 fv-row">
                                     <h1 class="fw-bold text-gray-900 mb-7">Submit a Request</h1>
@@ -57,7 +58,7 @@
 
                                         <!--begin::Input-->
                                         <input type="text" class="form-control form-control-solid"
-                                            placeholder="" name="name" />
+                                            placeholder="" name="name" value="{{ request.user.first_name }} {{ request.user.last_name }}" required />
                                         <!--end::Input-->
                                     </div>
                                     <!--end::Col-->
@@ -70,7 +71,7 @@
 
                                         <!--end::Input-->
                                         <input type="text" class="form-control form-control-solid"
-                                            placeholder="" name="email" />
+                                            placeholder="" name="email" value="{{ request.user.email }}" required />
                                         <!--end::Input-->
                                     </div>
                                     <!--end::Col-->
@@ -85,7 +86,7 @@
 
                                     <!--begin::Input-->
                                     <input class="form-control form-control-solid" placeholder=""
-                                        name="subject" />
+                                        name="subject" required />
                                     <!--end::Input-->
                                 </div>
                                 <!--end::Input group-->

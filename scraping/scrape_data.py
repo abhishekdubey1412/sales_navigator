@@ -25,7 +25,7 @@ def setup_driver(user_agent=None):
     chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
     chrome_options.add_argument("--disable-gpu")  # Disable GPU hardware acceleration
     chrome_options.add_argument("--disable-software-rasterizer")  # Disable software rasterizer
-    # chrome_options.add_argument("--disable-extensions")  # Disable extensions for performance
+    chrome_options.add_argument("--disable-extensions")  # Disable extensions for performance
     
     if user_agent:
         chrome_options.add_argument(f"user-agent={user_agent}")
@@ -995,3 +995,14 @@ def profile_deep_scrape_and_save_data(url, li_at_value, scraping_info_id, user_a
     else:
         update_scraping_info(driver, scraping_info_id, status='failed', active_package=active_package)
 # End People + Deep
+
+
+# Start PDeepCSV
+def profile_deep_scrape_and_save_data_csv(url, li_at_value, scraping_info_id, user_agent, request, active_package):
+    pass
+# End PDeepCSV
+
+# Start CDeepCSV
+def company_deep_scrape_and_save_data_csv(url, li_at_value, scraping_info_id, user_agent, request, active_package):
+    pass
+# End CDeepCSV

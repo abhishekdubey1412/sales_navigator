@@ -40,6 +40,7 @@ def scraping_setup(request, slug):
         export_per_launch = data.get('export_per_launch')
         name_results_file = data.get('name_results_file')
         fields_to_keep = data.get('fields_to_keep')
+        csv_file = request.FILES.get('csv_file_url')
 
         # Generate a unique scraping ID
         scraping_id = random.randint(1, 100000000000000)
@@ -47,17 +48,30 @@ def scraping_setup(request, slug):
             scraping_id = random.randint(1, 100000000000000)
         
         # Create a new ScrapingInfo object
-        ScrapingInfo.objects.create(
+        if csv_file:
+            ScrapingInfo.objects.create(
+                session_cookie=session_cookie,
+                user_agent=browser_agent,
+                number_of_lines_per_launch=export_per_launch,
+                number_of_results_per_search=export_per_search,
+                input_type=scraping_type.scraping_type,
+                headline=scraping_type.heading,
+                scraping_id=scraping_id,
+                slots=scraping_type.slot,
+                csv_file=csv_file
+            )
+        else:
+            ScrapingInfo.objects.create(
                 sales_url=sales_url,
-                session_cookie = session_cookie,
-                user_agent = browser_agent,
-                number_of_lines_per_launch = export_per_launch,
-                number_of_results_per_search = export_per_search,
-                input_type = scraping_type.scraping_type,
-                headline = scraping_type.heading,
-                scraping_id = scraping_id,
-                slots = scraping_type.slot
-        )
+                session_cookie=session_cookie,
+                user_agent=browser_agent,
+                number_of_lines_per_launch=export_per_launch,
+                number_of_results_per_search=export_per_search,
+                input_type=scraping_type.scraping_type,
+                headline=scraping_type.heading,
+                scraping_id=scraping_id,
+                slots=scraping_type.slot
+            )
 
         return redirect('launch', scraping_id=str(scraping_id))
 
@@ -92,8 +106,10 @@ def launch(request, scraping_id):
             scraping_funcs = {
                 "PNormal": people_normal_scrape_and_save_data,
                 "PDeep": profile_deep_scrape_and_save_data,
+                "PDeepCSV": profile_deep_scrape_and_save_data_csv,
                 "CNormal": company_normal_scrape_and_save_data,
-                "CDeep": company_deep_scrape_and_save_data
+                "CDeep": company_deep_scrape_and_save_data,
+                "CDeepCSV": company_deep_scrape_and_save_data_csv,
             }
 
             scrape_func = scraping_funcs.get(scraping_info.input_type)

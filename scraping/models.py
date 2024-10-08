@@ -14,6 +14,7 @@ class ScrapingType(models.Model):
 
 class ScrapingInfo(models.Model):
     sales_url = models.TextField(null=True, blank=True)
+    csv_file = models.FileField(upload_to='csv_files/', null=True, blank=True)
     session_cookie = models.TextField(null=True, blank=True)
     user_agent = models.TextField(null=True, blank=True)
     remove_duplicate_profiles = models.BooleanField(default=False, null=True, blank=True)

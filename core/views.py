@@ -1,9 +1,12 @@
-from .models import WebsiteDetails
+import threading
+from django.conf import settings
+from sales_navigator.mail import send_mail
+from .models import WebsiteDetails, ContactUs
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from subscriptions.models import Package, SubscriptionPlan
 from django.db.models import IntegerField, Case, When
 from scraping.models import ScrapingType, ScrapingInfo
+from django.contrib.auth.decorators import login_required
+from subscriptions.models import Package, SubscriptionPlan
 
 def get_common_context(request):
     return {
@@ -30,13 +33,45 @@ def home(request):
 # Contact Us page
 @login_required()
 def contact(request):
-    if request.method == "post":
+    if request.method == "POST":
         name    = request.POST.get("name", '')
         email   = request.POST.get("email", '')
         subject = request.POST.get("subject", '')
         message = request.POST.get("message", '')
 
-        return redirect("thanks.html")
+        contact_us = ContactUs(name=name, email=email, subject=subject, message=message)
+        contact_us.save()
+
+
+        context ={
+            "website_logo": WebsiteDetails.objects.first().small_light_logo,
+            "thank_you_image": request.build_absolute_uri("/static/assets/media/email/icon-positive-vote-1.svg"),
+            "website_name": WebsiteDetails.objects.first().website_name,
+            "website_url": request.build_absolute_uri("/"),
+        }
+
+        # Send email to user
+        mail_thread = threading.Thread(target=send_mail, args=( "Thank you for contacting us!", email, context, "contact-us-user" ))
+        mail_thread.start()
+
+        context ={
+            "website_logo": WebsiteDetails.objects.first().small_light_logo,
+            "thank_you_image": request.build_absolute_uri("/static/assets/media/email/icon-positive-vote-1.svg"),
+            "website_name": WebsiteDetails.objects.first().website_name,
+            "website_url": request.build_absolute_uri("/"),
+            "user_name": name,
+            "user_email": email,
+            "message": message,
+            "subject": subject,
+        }
+
+        # Send email to admin
+        mail_thread = threading.Thread(target=send_mail, args=( "New Contact Us Form Submission", settings.DEFAULT_FROM_EMAIL, context, "contact-us-admin" ))
+        mail_thread.start()
+
+
+        return redirect("thank_you")
+    
     return render(request, 'contact.html', get_common_context(request))
 
 # Thank You Page

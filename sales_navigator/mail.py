@@ -11,6 +11,10 @@ def send_mail(subject, to_email, context, mail_type):
             html_message = render_to_string('mail-templates/otp-email.html', context)
         elif mail_type == "reset-otp-email":
             html_message = render_to_string('mail-templates/email-reset-password.html', context)
+        elif mail_type == "contact-us-user":
+            html_message = render_to_string('mail-templates/contact-us-user.html', context)
+        elif mail_type == "contact-us-admin":
+            html_message = render_to_string('mail-templates/contact-us-admin.html', context)
 
         # Strip tags to create a plain text version
         plain_message = strip_tags(html_message)
