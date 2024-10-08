@@ -1,15 +1,15 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+
+# Load environment variables
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# Security settings
 SECRET_KEY = os.getenv('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 ALLOWED_HOSTS = ['*']
 
@@ -29,6 +29,10 @@ INSTALLED_APPS = [
     'scraping',
     'subscriptions',
     'authentication',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -40,13 +44,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'authentication.middleware.LoginSessionMiddleware',
     'authentication.middleware.UserActionLogMiddleware',
     'billing.middleware.ExpiredPackageMiddleware',
 ]
 
+# URL configuration
 ROOT_URLCONF = 'sales_navigator.urls'
 
+# Template settings
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -63,10 +70,13 @@ TEMPLATES = [
     },
 ]
 
+# WSGI application
 WSGI_APPLICATION = 'sales_navigator.wsgi.application'
+
+# Custom user model
 AUTH_USER_MODEL = 'users.UserProfile'
 
-# Database
+# Database configuration
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -74,12 +84,45 @@ DATABASES = {
     }
 }
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# Static files settings
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# Media files settings
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Authentication backends
 AUTHENTICATION_BACKENDS = [
     'authentication.backends.EmailBackend',  # Replace 'yourapp' with your actual app name
     'django.contrib.auth.backends.ModelBackend',  # Keep default for username authentication
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+# Social account providers
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+    }
+}
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_LOGOUT_ON_GET = True
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'sign_in'
+
+SOCIALACCOUNT_ADAPTER = 'authentication.adapters.MySocialAccountAdapter'
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -97,28 +140,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# TimeZone
+# Internationalization settings
 LANGUAGE_CODE = os.getenv('LANGUAGE_CODE')
 TIME_ZONE = os.getenv('TIME_ZONE')
 USE_I18N = True
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static'
-]
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
-# Media files (CSS, JavaScript, Images)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# SMPT Configuration
+# SMTP Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587

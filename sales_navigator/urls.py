@@ -4,7 +4,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    # Admin URLs
     path('admin/', admin.site.urls),
+    
+    # Third-party app URLs
+    path('accounts/', include('allauth.urls')),
+    
+    # Local app URLs
     path('', include('authentication.urls')),
     path('', include('users.urls')),
     path('', include('scraping.urls')),
