@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="card card-flush py-4">
+    <!--begin::Card header-->
+    <div class="card-header">
+        <div class="card-title">
+            <h2>Scraped Content</h2>
+        </div>
+    </div>
+    <!--end::Card header-->
+
+    <!--begin::Card body-->
+    <div class="card-body pt-0">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-3 alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% else %}alert-info{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <!--begin::Input group-->
+                <div class="col-md-6 mb-10 fv-row fv-plugins-icon-container">
+                    <!--begin::Label-->
+                    <label class="required form-label">Heading</label>
+                    <!--end::Label-->
+
+                    <!--begin::Input-->
+                    <input type="text" name="heading" class="form-control mb-2" placeholder="Heading" value="" required>
+                    <!--end::Input-->
+
+                    <!--begin::Description-->
+                    <div class="text-muted fs-7">Enter the heading of the scraping type.</div>
+                    <!--end::Description-->
+                <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div>
+                <!--end::Input group-->
+
+                <!--begin::Input group-->
+                <div class="col-md-6 mb-10 fv-row fv-plugins-icon-container">
+                    <!--begin::Label-->
+                    <label class="required form-label">Slug</label>
+                    <!--end::Label-->
+
+                    <!--begin::Input-->
+                    <input type="text" name="slug" class="form-control mb-2" placeholder="Slug" value="" required>
+                    <!--end::Input-->
+
+                    <!--begin::Description-->
+                    <div class="text-muted fs-7">Enter the slug of the scraping type.</div>
+                    <!--end::Description-->
+                <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div>
+                <!--end::Input group-->
+            </div>
+
+            <div class="row">
+                <!--begin::Input group-->
+                <div class="col-md-6 mb-10 fv-row fv-plugins-icon-container">
+                    <!--begin::Label-->
+                    <label class="required form-label">Scraping Type</label>
+                    <!--end::Label-->
+
+                    <!--begin::Input-->
+                    <input type="text" name="scraping_type" class="form-control mb-2" placeholder="Scraping Type" value="" required>
+                    <!--end::Input-->
+
+                    <!--begin::Description-->
+                    <div class="text-muted fs-7">Enter the type of scraping.</div>
+                    <!--end::Description-->
+                <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div>
+                <!--end::Input group-->
+
+                <!--begin::Input group-->
+                <div class="col-md-6 mb-10 fv-row fv-plugins-icon-container">
+                    <!--begin::Label-->
+                    <label class="required form-label">Slot</label>
+                    <!--end::Label-->
+
+                    <!--begin::Input-->
+                    <input type="text" name="slot" class="form-control mb-2" placeholder="Slot" value="" required>
+                    <!--end::Input-->
+
+                    <!--begin::Description-->
+                    <div class="text-muted fs-7">Enter the slot of the scraping type.</div>
+                    <!--end::Description-->
+                <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div>
+                <!--end::Input group-->
+            </div>
+
+            <div class="row">
+                <!--begin::Input group-->
+                <div class="col-md-12 mb-10 fv-row fv-plugins-icon-container">
+                    <!--begin::Label-->
+                    <label class="required form-label">Short Description</label>
+                    <!--end::Label-->
+
+                    <!--begin::Input-->
+                    <textarea name="short_description" class="form-control mb-2" placeholder="Short Description" required></textarea>
+                    <!--end::Input-->
+
+                    <!--begin::Description-->
+                    <div class="text-muted fs-7">Enter a brief description of the scraping type.</div>
+                    <!--end::Description-->
+                <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div>
+                <!--end::Input group-->
+            </div>
+
+            <!--begin::Submit button-->
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            <!--end::Submit button-->
+        </form>
+    </div>
+    <!--end::Card header-->
+</div>
+{% endblock content %}

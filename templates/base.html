@@ -15,10 +15,6 @@
     <link rel="canonical" href="https://preview.keenthemes.comindex.html" />
     <link rel="shortcut icon" href="{% static 'assets/media/logos/favicon.ico' %}" />
 
-    <!--begin::Fonts(mandatory for all pages)-->
-    {% comment %} <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" /> {% endcomment %}
-    <!--end::Fonts-->
-
     <!--begin::Vendor Stylesheets(used for this page only)-->
     <link href="{% static 'assets/plugins/custom/fullcalendar/fullcalendar.bundle.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'assets/plugins/custom/datatables/datatables.bundle.css' %}" rel="stylesheet" type="text/css" />
@@ -29,25 +25,6 @@
     <link href="{% static 'assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'assets/css/style.bundle.css' %}" rel="stylesheet" type="text/css" />
     <!--end::Global Stylesheets Bundle-->
-
-    <!--begin::Google tag-->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-37564768-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-        gtag('config', 'UA-37564768-1');
-    </script>
-    <!--end::Google tag-->
-    <script>
-        // Frame-busting to prevent site from being loaded within a frame without permission (click-jacking)
-        if (window.top != window.self) {
-            window.top.location.replace(window.self.location.href);
-        }
-    </script>
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -569,7 +546,7 @@
                                     
                                     {% if request.user.is_superuser %}
                                     <!--begin:Menu item-->
-                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {% if request.path == "/dashboard/" or request.path == "/users-list/" or request.path == "/roles/" or request.path == "/customization/" %}show{% endif %}">
+                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {% if request.path == "/dashboard/" or request.path == "/users-list/" or request.path == "/roles/" or request.path == "/scrape-content/" or request.path == "/customization/" %}show{% endif %}">
                                         <!--begin:Menu link-->
                                         <span class="menu-link">
                                             <span class="menu-icon">
@@ -617,6 +594,18 @@
                                                         <span class="bullet bullet-dot"></span>
                                                     </span>
                                                     <span class="menu-title">Roles</span>
+                                                </a>
+                                                <!--end:Menu link-->
+                                            </div>
+                                            <!--end:Menu item-->
+                                            <!--begin:Menu item-->
+                                            <div class="menu-item">
+                                                <!--begin:Menu link-->
+                                                <a class="menu-link {% if request.path == '/scrape-content/' %}active{% endif %}" href="{% url "scrape_content" %}">
+                                                    <span class="menu-bullet">
+                                                        <span class="bullet bullet-dot"></span>
+                                                    </span>
+                                                    <span class="menu-title">Scraped Content</span>
                                                 </a>
                                                 <!--end:Menu link-->
                                             </div>

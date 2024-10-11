@@ -20,5 +20,6 @@ urlpatterns = [
     path('user-deactivate/<int:user_id>/', views.user_deactivate, name='user_deactivate'),
     path('roles/', views.roles, name='roles'),
     path('user-role/', views.user_role, name='user_role'),
+    path('scrape-content/', views.scrape_content, name='scrape_content'),
     path('customization/', views.customization, name='customization'),
 ]

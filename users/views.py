@@ -219,6 +219,38 @@ def user_role(request):
     return redirect('home')
 
 @login_required(login_url='sign_in')
+def scrape_content(request):
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            heading = request.POST.get('heading')
+            slug = request.POST.get('slug')
+            scraping_type = request.POST.get('scraping_type')
+            slot = request.POST.get('slot')
+            short_description = request.POST.get('short_description')
+
+            if heading and slug and scraping_type and slot and short_description:
+                if not ScrapingType.objects.filter(heading=heading).exists() and \
+                   not ScrapingType.objects.filter(slug=slug).exists() and \
+                   not ScrapingType.objects.filter(scraping_type=scraping_type).exists():
+                    ScrapingType.objects.create(
+                        heading=heading,
+                        slug=slug,
+                        scraping_type=scraping_type,
+                        slot=slot,
+                        short_description=short_description
+                    )
+                    messages.success(request, 'Scraping type created successfully.')
+                    return redirect('scrape_content')
+                else:
+                    messages.error(request, 'Scraping type with provided details already exists.')
+                    return redirect('scrape_content')
+            else:
+                messages.error(request, 'All fields are required.')
+                return redirect('scrape_content')
+        return render(request, 'user-management/scraped-content.html', get_common_context(request))
+    return redirect('home')
+
+@login_required(login_url='sign_in')
 def customization(request):
     if request.user.is_superuser:
         context = get_common_context(request)
