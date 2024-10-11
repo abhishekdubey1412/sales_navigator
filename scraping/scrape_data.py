@@ -998,11 +998,11 @@ def profile_deep_scrape_and_save_data(url, li_at_value, scraping_info_id, user_a
 
 
 # Start PDeepCSV
-def profile_deep_scrape_and_save_data_csv(url, li_at_value, scraping_info_id, user_agent, request, active_package):
+def profile_deep_scrape_and_save_data_csv(csv_file, li_at_value, scraping_info_id, user_agent, request, active_package):
     pass
 # End PDeepCSV
 
 # Start CDeepCSV
-def company_deep_scrape_and_save_data_csv(url, li_at_value, scraping_info_id, user_agent, request, active_package):
+def company_deep_scrape_and_save_data_csv(csv_file, li_at_value, scraping_info_id, user_agent, request, active_package):
     pass
 # End CDeepCSV
