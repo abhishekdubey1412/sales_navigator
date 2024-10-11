@@ -1,11 +1,9 @@
-# yourapp/models.py
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class UserProfile(AbstractUser):
     mobile_no = models.CharField(max_length=15, blank=True, null=True)
-    profile_image = models.ImageField(upload_to='avatars/', blank=True, null=True, default="avatars/default_image.jpg")
+    profile_image = models.FileField(upload_to='avatars/', blank=True, null=True, default="avatars/default_image.jpg")
     company_name = models.CharField(max_length=255, blank=True)
     tax_id = models.CharField(max_length=50, blank=True)
     address = models.TextField(blank=True)
