@@ -1,4 +1,5 @@
 import re
+import csv
 import time
 import pickle
 import logging
@@ -17,16 +18,24 @@ from selenium.webdriver.support import expected_conditions as EC
 from .models import ScrapingInfo, LinkedInProfile, LinkedInCompany
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementClickInterceptedException
 
-# Start Helper Functions
+# Start Helper Functionsfrom selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium import webdriver
+
 def setup_driver(user_agent=None):
     chrome_options = Options()
     chrome_options.add_argument("--headless")  # Run in headless mode
     chrome_options.add_argument("--no-sandbox")  # Required for headless mode on some systems
     chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
     chrome_options.add_argument("--disable-gpu")  # Disable GPU hardware acceleration
-    chrome_options.add_argument("--disable-software-rasterizer")  # Disable software rasterizer
     chrome_options.add_argument("--disable-extensions")  # Disable extensions for performance
-    
+    chrome_options.add_argument("--disable-popup-blocking")  # Disable popup blocking
+    chrome_options.add_argument("--disable-notifications")  # Disable notifications
+    chrome_options.add_argument("--disable-infobars")  # Disable infobars
+    chrome_options.add_argument("--disable-blink-features=AutomationControlled")  # Disable automation controlled
+    chrome_options.add_argument("--disable-web-security")  # Disable web security
+    chrome_options.add_argument("--disable-features=IsolateOrigins,site-per-process")  # Disable isolate origins and site per process
+
     if user_agent:
         chrome_options.add_argument(f"user-agent={user_agent}")
     
@@ -422,7 +431,6 @@ def company_normal_scrape_and_save_data(url, li_at_value, scraping_info_id, user
                 scroll_down(search_results_container, driver, wait)
 
                 search_results = search_results_container.find_elements(By.TAG_NAME, 'li')
-            
                 for result in search_results:
                     try:
                         found = result.find_element(By.CSS_SELECTOR, '[data-view-name="search-results-entity"]')
@@ -452,185 +460,225 @@ def company_normal_scrape_and_save_data(url, li_at_value, scraping_info_id, user
 
 
 # Start Company + Deep
-def get_company_details(driver, wait):
+def extract_company_deep_data(driver, wait, is_csv=False):
+    def safe_find_element_by_css_selector(selector):
+        try:
+            return wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector))).text
+        except Exception as e:
+            print(f"Error finding element by CSS selector {selector}: {e}")
+            return "None"
+
+    company_name = safe_find_element_by_css_selector('[data-anonymize="company-name"]')
+    industry = safe_find_element_by_css_selector('[data-anonymize="industry"]')
+
+    if is_csv:  
+        employee_count_text = safe_find_element_by_css_selector('[data-anonymize="company-size"]')
+        employee_count = employee_count_text.split('on')[0] if employee_count_text != "None" else "None"
+    
+    location = safe_find_element_by_css_selector('[data-anonymize="location"]')
+    
     try:
-        content_element = wait.until(
-            EC.presence_of_element_located((By.CLASS_NAME, "artdeco-card.org-page-details-module__card-spacing.artdeco-card.org-about-module__margin-bottom"))
-        )
-        data2 = content_element.text
-
-        overview_pattern = r'Overview\n(.*?)\n(?=Website|Phone|Industry|Company size|$)'
-        match = re.search(overview_pattern, data2, re.DOTALL)
-        overview = match.group(1).strip() if match else "None"
-
-        patterns = {
-            "company_employee_range": r"Company size\n(.*?) employees",
-            "company_year_founded": r"Founded\n(\d+)",
-            "phone": r"Phone\n(.*?)\n"
-        }
-        
-        def extract_info(data, patterns):
-            extracted_info = {}
-            for key, pattern in patterns.items():
-                match = re.search(pattern, data, re.DOTALL)
-                if match:
-                    extracted_info[key] = match.group(1).strip()
-                else:
-                    extracted_info[key] = "None"  # Or handle the missing information as needed
-            return extracted_info
-
-        # Use the function
-        info = extract_info(data2, patterns)
-
-        data2 = info
-
-        # data2 = {key: re.search(pattern, data2).group(1).strip() if re.search(pattern, data2) else "None" for key, pattern in patterns.items()}
-
-        # Constructing the final list with the extracted data2, including website, city, and state
-        data2["overview"] = overview
-        data2["linkedin_company_url"] = driver.current_url.split('/about')[0]
-        
-        return data2
+        country = location.split(', ')[-1] if ', ' in location else "None"
     except Exception as e:
-        print(f"Linkdin Data Nhi hai {e}", driver.current_url.split('/about')[0])
-        data2 = {
-            "company_employee_range": "None",
-            "company_year_founded": "None",
-            "phone": "None",
-            "overview": "None",
-            "linkedin_company_url": driver.current_url.split('/about')[0]
-        }
-        return data2
-
-def extract_company_deep_data(result, driver, wait):
-    data = {}
-    try:
-        # Extract company URL and ID
-        a_tag = result.find_element(By.CLASS_NAME, 'artdeco-entity-lockup__title.ember-view').find_element(By.TAG_NAME, 'a')
-        data['company_url'] = a_tag.get_attribute('href').split('?', 1)[0]
-        data['company_id'] = data['company_url'].split('/company/')[1]
-        data['regular_company_url'] = f"https://www.linkedin.com/company/{data['company_id']}"
-
-        # Extract company name
-        data['company_name'] = a_tag.text
-
-        # Extract company logo URL
-        data['logo_url'] = "None"
-        try:
-            logo_element = result.find_element(By.TAG_NAME, 'img')
-            data['logo_url'] = logo_element.get_attribute('src')
-        except:
-            data['logo_url'] = "None"
-
-        # Extract company industry
-        data['industry'] = "None"
-        try:
-            industry_element = result.find_element(By.CSS_SELECTOR, '[data-anonymize="industry"]')
-            data['industry'] = industry_element.text
-        except:
-            data['industry'] = "None"
-
-        # Extract company employees count
-        data['employees_count'] = "None"
-        try:
-            employees_count_element = result.find_element(By.CSS_SELECTOR, '[data-anonymize="company-size"]')
-            data['employees_count'] = employees_count_element.text
-        except:
-            data['employees_count'] = "None"
-
-    except Exception as e:
-        pass
-
-    return data
-
-def extract_company_deep_all_data(company_data, driver, wait):
-    additional_data = {}
-
-    if company_data.get('regular_company_url') != "None" and company_data.get('regular_company_url'):
-        regular_company_url = company_data.pop('regular_company_url') + '/about/'
-
-        # Open the company details page
-        open_new_tab(driver=driver, url=regular_company_url)
-        company_details = get_company_details(driver, wait)
-        additional_data.update(company_details)
-        close_current_tab(driver)
-
-    else:
-        additional_data.update({
-            "company_employee_range": "None",
-            "company_year_founded": "None",
-            "phone": "None",
-            "overview": "None",
-            "linkedin_company_url": "None"
-        })
-
-    if company_data.get('company_url') != "None" and company_data.get('company_url'):
-        open_new_tab(driver=driver, url=company_data['company_url'])
-
-        min_revenue = "Not available"
-        max_revenue = "Not available"
-        location = "None"
-        city = "None"
-        geographic_area = "None"
+        print(f"Error extracting country: {e}")
         country = "None"
-        website = "Not available"
-        
-        try:
-            revenue_element = wait.until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, '[data-anonymize="revenue"]'))
-            )
-            revenue = revenue_element.text.split('-')
-            if len(revenue) == 2:
-                min_revenue = revenue[0].strip()
-                max_revenue = revenue[1].strip()
-        except Exception as e:
-            print(f"Error extracting revenue: {e}")
-        
-        try:
-            location_element = wait.until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, '[data-anonymize="location"]'))
-            )
-            location = location_element.text
-            if location:
-                parts = location.split(',')
-                if len(parts) >= 3:
-                    city, geographic_area, country = [part.strip() for part in parts[:3]]
-                else:
-                    city = geographic_area = country = "None"
-                    location = "None"
-        except Exception as e:
-            print(f"Error extracting location: {e}")
+    
+    try:
+        geographic_area = location.split(', ')[1] if ', ' in location else "None"
+    except Exception as e:
+        print(f"Error extracting geographic area: {e}")
+        geographic_area = "None"
+    
+    try:
+        city = location.split(', ')[0] if ', ' in location else "None"
+    except Exception as e:
+        print(f"Error extracting city: {e}")
+        city = "None"
+    
+    try:
+        company_id = driver.current_url.split('/company/')[1].split('?')[0] if '/company/' in driver.current_url else "None"
+    except Exception as e:
+        print(f"Error extracting company ID: {e}")
+        company_id = "None"
 
-        try:
-            website_element = wait.until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, '[data-control-name="visit_company_website"]'))
-            )
-            website = website_element.get_attribute('href')
-        except:
-            website = "Not available"
-        
-        additional_data.update({
-            "min_revenue": min_revenue,
-            "max_revenue": max_revenue,
-            "location": location,
-            "city": city,
-            "geographic_area": geographic_area,
-            "country": country,
-            "website": website
-        })
-        close_current_tab(driver)
+    try:
+        sales_navigator_company_url = driver.current_url.split('?')[0] if '?' in driver.current_url else driver.current_url
+    except Exception as e:
+        print(f"Error extracting sales navigator company URL: {e}")
+        sales_navigator_company_url = driver.current_url
+
+    try:
+        website_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '[data-control-name="visit_company_website"]')))
+        website = website_element.get_attribute('href') if website_element else "None"
+    except Exception as e:
+        print(f"Error extracting website: {e}")
+        website = "None"
+
+    try:
+        domain = website.split('//')[1] if '//' in website else "None"
+    except Exception as e:
+        print(f"Error extracting domain: {e}")
+        domain = "None"
+
+    try:
+        logo_url = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '[data-anonymize="company-logo"]'))).get_attribute('src')
+    except Exception as e:
+        print(f"Error extracting logo URL: {e}")
+        logo_url = "None"
+
+    try:
+        revenue = safe_find_element_by_css_selector('[data-anonymize="revenue"]')
+    except Exception as e:
+        print(f"Error extracting revenue: {e}")
+        revenue = "None"
+    
+    if '$1B+' in revenue:
+        min_revenue = "None"
+        max_revenue = "None"
     else:
-        additional_data.update({
-            "min_revenue": "None",
-            "max_revenue": "None",
-            "location": "None",
-            "city": "None",
-            "geographic_area": "None",
-            "country": "None",
-            "website": "Not available"
-        })
+        min_revenue = revenue.split('-')[0].strip() if '-' in revenue else "None"
+        max_revenue = revenue.split('-')[1].strip().split(' ')[0] if '-' in revenue else "None"
 
-    return additional_data
+    try:
+        more_options_button = driver.find_element(By.CSS_SELECTOR, '[aria-label="More options"]')
+        more_options_button.click()
+        linkedin_company_url = wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, '#hue-web-menu-outlet div:nth-child(2) ul li:nth-child(1)'))
+        ).get_attribute('href')
+    except (NoSuchElementException, ElementClickInterceptedException, TimeoutException) as e:
+        print(f"Error finding LinkedIn company URL: {e}")
+        linkedin_company_url = "None"
+
+    try:
+        linkedin_company_url_button = wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, '#hue-web-menu-outlet div:nth-child(2) ul li:nth-child(3)'))
+        )
+        linkedin_company_url_button.click()
+    except (NoSuchElementException, ElementClickInterceptedException, TimeoutException) as e:
+        print(f"Error clicking LinkedIn company URL button: {e}")
+        linkedin_company_url_button = None
+
+    try:
+        linkedin_company_url_element = wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/div[7]/div/div')))
+        description = linkedin_company_url_element.find_element(By.CSS_SELECTOR, '[data-anonymize="company-blurb"]').text
+    except (NoSuchElementException, ElementClickInterceptedException, TimeoutException) as e:
+        print(f"Error finding company description: {e}")
+        description = "None"
+
+    try:
+        headquarters = linkedin_company_url_element.find_element(By.CSS_SELECTOR, '[data-anonymize="address"]').text
+    except (NoSuchElementException, ElementClickInterceptedException, TimeoutException) as e:
+        print(f"Error finding company headquarters: {e}")
+        headquarters = "None"
+    
+    try:
+        postal_code = re.search(r'\b\d{5}(?:-\d{4})?\b', headquarters)
+        postal_code = postal_code.group() if postal_code else "None"
+    except Exception as e:
+        print(f"Error finding postal code: {e}")
+        postal_code = "None"
+
+    try:
+        address = headquarters.split(city)[0].strip() if city in headquarters else "None"
+    except Exception as e:
+        print(f"Error finding address: {e}")
+        address = "None"
+
+    try:
+        linkedin_company_details = wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/div[7]/div/div/div[2]/div')))
+    except Exception as e:
+        print(f"Error finding LinkedIn company details: {e}")
+        linkedin_company_details = None
+        
+    if linkedin_company_details:
+        try:
+            company_type_element = re.search(r'Type\n(.*?)\n', linkedin_company_details.text)
+            company_type = company_type_element.group(1).strip() if company_type_element else "None"
+        except Exception as e:
+            print(f"Error finding company type: {e}")
+            company_type = "None"
+
+        try:
+            founded_year_element = re.search(r'Founded\n(\d+)', linkedin_company_details.text)
+            founded_year = founded_year_element.group(1).strip() if founded_year_element else "None"
+        except Exception as e:
+            print(f"Error finding company founded year: {e}")
+            founded_year = "None"
+
+        try:
+            specialties_element = re.search(r'Specialties\n(.*?)\n', linkedin_company_details.text, re.DOTALL)
+            specialties = specialties_element.group(1).strip() if specialties_element else "None"
+        except Exception as e:
+            print(f"Error finding company specialties: {e}")
+            specialties = "None"
+
+        try:
+            phone_element = re.search(r'Phone\n(.*?)\n', linkedin_company_details.text)
+            phone = phone_element.group(1).strip() if phone_element else "None"
+        except Exception as e:
+            print(f"Error finding company phone: {e}")
+            phone = "None"
+    else:
+        company_type = "None"
+        founded_year = "None"
+        specialties = "None"
+        phone = "None"
+
+    try:
+        dismiss_button = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '[aria-label="Dismiss"]')))
+        dismiss_button.click()
+    except Exception as e:
+        print(f"Error clicking dismiss button: {e}")
+    
+    if is_csv:
+        try:
+            all_employees_element = wait.until(EC.presence_of_element_located((By.XPATH, "//div[@id='account']//a[contains(@aria-label, 'See all') and contains(@aria-label, 'employees on search results page')]")))
+            employee_search_url = all_employees_element.get_attribute('href')
+        except Exception as e:
+            print(f"Error finding all employees link: {e}")
+            employee_search_url = "None"
+
+    try:
+        decision_makers_element = wait.until(EC.presence_of_element_located((By.XPATH, "//div[@id='account']//a[contains(@aria-label, 'See all') and contains(@aria-label, 'decision makers on search results page')]")))
+        decision_makers_text = decision_makers_element.text
+        decision_makers_search_url = decision_makers_element.get_attribute('href')
+    except Exception as e:
+        print(f"Error finding decision makers link: {e}")
+        decision_makers_text = "None"
+        decision_makers_search_url = "None"
+
+    # Extract the count from the text
+    try:
+        decision_makers_count = re.search(r'\((\d+)\)', decision_makers_text).group(1)
+    except Exception as e:
+        print(f"Error extracting decision makers count: {e}")
+        decision_makers_count = "None"
+
+    employee_count_range = "None"
+
+    if is_csv:
+        return {
+        'company_name': company_name, 'description': description, 'industry': industry,
+        'employee_count': employee_count, 'location': location, 'country': country, 
+        'geographic_area': geographic_area, 'city': city, 'postal_code': postal_code, 
+        'address': address, 'headquarters': headquarters, 'company_id': company_id,
+        'linkedin_company_url': linkedin_company_url, 'sales_navigator_company_url': sales_navigator_company_url, 
+        'website': website, 'employee_count_range': employee_count_range, 'domain': domain, 
+        'decision_makers_search_url': decision_makers_search_url, 'employee_search_url': employee_search_url,
+        'decision_makers_count': decision_makers_count, 'logo_url': logo_url, 'founded_year': founded_year, 
+        'company_type': company_type, 'specialties': specialties, 'min_revenue': min_revenue, 'max_revenue': max_revenue, 
+        'phone': phone
+        }
+
+    return {
+        'company_name': company_name, 'description': description, 'industry': industry,
+        'location': location, 'country': country, 'geographic_area': geographic_area, 'city': city,
+        'postal_code': postal_code, 'address': address, 'headquarters': headquarters, 'company_id': company_id,
+        'linkedin_company_url': linkedin_company_url, 'sales_navigator_company_url': sales_navigator_company_url, 'website': website,
+        'employee_count_range': employee_count_range, 'domain': domain, 'decision_makers_search_url': decision_makers_search_url,
+        'decision_makers_count': decision_makers_count, 'logo_url': logo_url, 'founded_year': founded_year, 'company_type': company_type,
+        'specialties': specialties, 'min_revenue': min_revenue, 'max_revenue': max_revenue, 'phone': phone
+    }
 
 def company_deep_scrape_and_save_data(url, li_at_value, scraping_info_id, user_agent, request, active_package):
     driver, wait, logged_in = initialize_scraping(user_agent, li_at_value, scraping_info_id, request, active_package)
@@ -643,47 +691,57 @@ def company_deep_scrape_and_save_data(url, li_at_value, scraping_info_id, user_a
                 scroll_down(search_results_container, driver, wait)
 
                 search_results = search_results_container.find_elements(By.TAG_NAME, 'li')
-                for result in search_results:
-                    try:
-                        found = result.find_element(By.CSS_SELECTOR, '[data-view-name="search-results-entity"]')
-                        found = True
-                    except:
-                        found =  False
-                    
-                    if found:
-                        data1 = extract_company_deep_data(result, driver, wait)
-                        if data1:
-                            additional_data = extract_company_deep_all_data(data1, driver, wait)
-                            data1.update(additional_data)
+                found_elements = [result for result in search_results if result.find_elements(By.CSS_SELECTOR, '[data-view-name="search-results-entity"]')]
+                for result in found_elements:
+                    regular_company_url = result.find_element(By.CSS_SELECTOR, '[data-view-name="search-results-account-name"]').get_attribute('href')
+                    employee_count_element = result.find_element(By.CSS_SELECTOR, '[data-anonymize="company-size"]')
+                    employee_count = employee_count_element.text
+                    employee_search_url = employee_count_element.get_attribute('href')
 
-                            # Create a new LinkedInCompanyDeep instance
-                            LinkedInCompany.objects.create(
-                                query=url,  # Assuming query is the URL you're scraping
-                                company_name=data1['company_name'],
-                                company_id=data1['company_id'],
-                                sales_navigator_company_url=data1['company_url'],
-                                company_profile_picture=data1['logo_url'],
-                                company_website=data1['website'],
-                                company_industry=data1['industry'],
-                                company_employee_count=data1['employees_count'],
-                                company_employee_range=data1['company_employee_range'],
-                                company_year_founded=data1['company_year_founded'],
-                                company_number=data1['phone'],
-                                company_description=data1['overview'],
-                                regular_company_url=data1['linkedin_company_url'],
-                                company_revenue_min=data1['min_revenue'],
-                                company_revenue_max=data1['max_revenue'],
-                                company_location=data1['location'],
-                                city=data1['city'],
-                                geographicArea=data1['geographic_area'],
-                                country=data1['country'],
-                                scraping_id = ScrapingInfo.objects.get(id=scraping_info_id).scraping_id
-                            )
+
+                    # Open the company details page
+                    open_new_tab(driver=driver, url=regular_company_url)
+                    data1 = extract_company_deep_data(driver, wait)
+                    close_current_tab(driver)
+
+                    if data1:
+                        # Create a new LinkedInCompanyDeep instance
+                        LinkedInCompany.objects.create(
+                            query=url,  # Assuming query is the URL you're scraping
+                            company_name=data1['company_name'],
+                            company_description=data1['description'],
+                            company_industry=data1['industry'],
+                            company_employee_count=employee_count,
+                            company_location=data1['location'],
+                            country=data1['country'],
+                            geographicArea=data1['geographic_area'],
+                            city=data1['city'],
+                            postal_code=data1['postal_code'],
+                            address=data1['address'],
+                            company_headquarters=data1['headquarters'],
+                            company_id=data1['company_id'],
+                            regular_company_url=data1['linkedin_company_url'],
+                            sales_navigator_company_url=data1['sales_navigator_company_url'],
+                            company_website=data1['website'],
+                            company_domain=data1['domain'],
+                            decision_makers_search_url=data1['decision_makers_search_url'],
+                            employee_search_url=employee_search_url,
+                            decision_makers_count=data1['decision_makers_count'],
+                            company_profile_picture=data1['logo_url'],
+                            company_year_founded=data1['founded_year'],
+                            company_number=data1['phone'],
+                            company_revenue_min=data1['min_revenue'],
+                            company_revenue_max=data1['max_revenue'],
+                            company_specialties=data1['specialties'],
+                            company_type=data1['company_type'],
+                            scraping_id=ScrapingInfo.objects.get(id=scraping_info_id).scraping_id,
+                        )
 
                 if next_page(driver):
                     break
 
-        except:
+        except Exception as e:
+            print(f"Error in company deep scrape: {e}")
             update_scraping_info(driver, scraping_info_id, status='completed', active_package=active_package)
 
         update_scraping_info(driver, scraping_info_id, status='completed', active_package=active_package)
@@ -1004,5 +1062,36 @@ def profile_deep_scrape_and_save_data_csv(csv_file, li_at_value, scraping_info_i
 
 # Start CDeepCSV
 def company_deep_scrape_and_save_data_csv(csv_file, li_at_value, scraping_info_id, user_agent, request, active_package):
-    pass
+    with open(csv_file.path, 'r') as file:
+        reader = csv.reader(file)
+        links = [row[0] for row in reader]
+
+    if not links:
+        update_scraping_info(driver, scraping_info_id, status='completed', active_package=active_package)
+    driver, wait, logged_in = initialize_scraping(user_agent, li_at_value, scraping_info_id, request, active_package)
+
+    if logged_in:
+        for url in links:
+            driver.get(url)
+            try:
+                data = extract_company_deep_data(driver, wait, is_csv=True)
+                if data:
+                    LinkedInCompany.objects.create(
+                        query=url, company_name=data['company_name'], company_description=data['description'], company_industry=data['industry'], 
+                        company_employee_count=data['employee_count'], company_location=data['location'], country=data['country'],
+                        geographicArea=data['geographic_area'], city=data['city'], postal_code=data['postal_code'], address=data['address'],
+                        company_headquarters=data['headquarters'], company_id=data['company_id'], regular_company_url=data['linkedin_company_url'],
+                        sales_navigator_company_url=data['sales_navigator_company_url'], company_website=data['website'], company_domain=data['domain'],
+                        decision_makers_search_url=data['decision_makers_search_url'], employee_search_url=data['employee_search_url'],
+                        decision_makers_count=data['decision_makers_count'], company_profile_picture=data['logo_url'],
+                        company_year_founded=data['founded_year'], company_number=data['phone'], company_revenue_min=data['min_revenue'],
+                        company_revenue_max=data['max_revenue'], company_specialties=data['specialties'], company_type=data['company_type'],
+                        scraping_id=ScrapingInfo.objects.get(id=scraping_info_id).scraping_id,
+                    )
+            except:
+                pass
+        if links:
+            update_scraping_info(driver, scraping_info_id, status='completed', active_package=active_package)
+    else:
+        update_scraping_info(driver, scraping_info_id, status='failed', active_package=active_package)   
 # End CDeepCSV

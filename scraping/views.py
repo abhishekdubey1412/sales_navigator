@@ -2,9 +2,9 @@ import csv
 import random
 import threading
 from .scrape_data import *
-from django.http import HttpResponse, JsonResponse
 from core.models import WebsiteDetails
 from subscriptions.models import Package
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import ScrapingType, ScrapingInfo, LinkedInProfile, LinkedInCompany
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
@@ -120,6 +120,25 @@ def launch(request, scraping_id):
                 thread.start()
 
                 return redirect('launch', scraping_id)
+        elif scraping_info.csv_file:
+            scraping_info.email = request.user.email
+            scraping_info.save()
+
+            # Define scraping functions based on input type
+            scraping_funcs = {
+                "PDeepCSV": profile_deep_scrape_and_save_data_csv,
+                "CDeepCSV": company_deep_scrape_and_save_data_csv,
+                }
+
+            scrape_func = scraping_funcs.get(scraping_info.input_type)
+            if scrape_func:
+                # Start the scraping process in a new thread
+                thread = threading.Thread(target=scrape_func, args=(scraping_info.csv_file, scraping_info.session_cookie, 
+                                                                    scraping_info.id, scraping_info.user_agent, request, active_package))
+                thread.start()
+                return redirect('launch', scraping_id)
+        else:
+            return redirect('browser-scraping')
     
     context.update({
         'scraping_info': scraping_info
@@ -180,7 +199,7 @@ def scraped_data(request, scraping_id):
         scraping_id = scraping_id.split('/')[0]
 
         # Fetch profiles and companies based on scraping_id
-        if input_type in ['CNormal', 'CDeep']:
+        if input_type in ['CNormal', 'CDeep', 'CDeepCSV']:
             companies = get_list_or_404(LinkedInCompany, scraping_id=scraping_id)
 
             if input_type == 'CNormal':
@@ -196,7 +215,7 @@ def scraped_data(request, scraping_id):
                     'is_hiring': company.is_hiring,
                 } for company in companies]
             
-            else:
+            elif input_type == 'CDeepCSV' or 'CDeep':
                 combined_data_list = [{
                 'company_name': company.company_name,
                 'company_description': company.company_description,
@@ -216,9 +235,18 @@ def scraped_data(request, scraping_id):
                 'company_revenue_min': company.company_revenue_min,
                 'company_revenue_max': company.company_revenue_max,
                 'company_number': company.company_number,
+                'address': company.address,
+                'postal_code': company.postal_code,
+                'specialties': company.specialties,
+                'company_type': company.company_type,
+                'decision_makers_search_url': company.decision_makers_search_url,
+                'employee_search_url': company.employee_search_url,
+                'decision_makers_count': company.decision_makers_count,
+                'query': company.query,
+                'timestamp': company.timestamp,
             } for company in companies]
 
-        elif input_type in ["PNormal", "PDeep"]:
+        elif input_type in ["PNormal", "PDeep", "PDeepCSV"]:
             profiles = get_list_or_404(LinkedInProfile, scraping_id=scraping_id)
             companies = get_list_or_404(LinkedInCompany, scraping_id=scraping_id)
 
@@ -318,10 +346,10 @@ def export_csv(request, scraping_id):
     scraping_info = get_object_or_404(ScrapingInfo, scraping_id=scraping_id, email=request.user.email)
     
     # Fetch LinkedInProfile and LinkedInCompany data
-    if scraping_info.input_type == "PNormal" or "PDeep":
+    if scraping_info.input_type == "PNormal" or "PDeep" or "PDeepCSV":
         profiles = LinkedInProfile.objects.filter(scraping_id=scraping_id)
         companies = LinkedInCompany.objects.filter(scraping_id=scraping_id)
-    elif scraping_info.input_type == "CNormal" or "CDeep":
+    elif scraping_info.input_type == "CNormal" or "CDeep" or "CDeepCSV":
         companies = LinkedInCompany.objects.filter(scraping_id=scraping_id)
     else:
         return redirect('home')
@@ -353,7 +381,7 @@ def export_csv(request, scraping_id):
                 company.regular_company_url if company else '', company.vmid if company else '', 
                 company.company_location if company else '', company.company_industry if company else ''
             ])
-    elif scraping_info.input_type == "PDeep":
+    elif scraping_info.input_type == "PDeep" or scraping_info.input_type == "PDeepCSV":
         writer.writerow([
             'Query', 'Sales Navigator URL', 'Full Name', 'First Name', 'Last Name', 'Profile Picture', 'Job Title', 
             'Is Premium', 'Location', 'Headline', 'Connections', 'LinkedIn URL', 'Summary', 'Years in Company', 
@@ -393,12 +421,13 @@ def export_csv(request, scraping_id):
                 company.regular_company_url, company.company_industry, company.company_employee_count, 
                 company.company_profile_picture, company.is_hiring, company.query
             ])
-    elif scraping_info.input_type == "CDeep":
+    elif scraping_info.input_type == "CDeep" or scraping_info.input_type == "CDeepCSV":
         writer.writerow([
             'Query', 'Company Name', 'Company ID', 'Sales Navigator Company URL', 'Company Profile Picture', 
             'Company Website', 'Company Industry', 'Company Employee Count', 'Company Employee Range', 
             'Company Year Founded', 'Company Number', 'Company Description', 'Regular Company URL', 
-            'Company Revenue Min', 'Company Revenue Max', 'Company Location', 'City', 'Geographic Area', 'Country'
+            'Company Revenue Min', 'Company Revenue Max', 'Company Location', 'City', 'Geographic Area', 'Country', 
+            'Address', 'Postal Code', 'Decision Makers Search URL', 'Employee Search URL', 'Decision Makers Count'
         ])
         
         for i, company in enumerate(companies):
@@ -410,7 +439,8 @@ def export_csv(request, scraping_id):
                 company.company_employee_count, company.company_employee_range, company.company_year_founded, 
                 company.company_number, company.company_description, company.regular_company_url, 
                 company.company_revenue_min, company.company_revenue_max, company.company_location, 
-                company.city, company.geographicArea, company.country
+                company.city, company.geographicArea, company.country, company.address, company.postal_code, 
+                company.decision_makers_search_url, company.employee_search_url, company.decision_makers_count
             ])
     
     return response
