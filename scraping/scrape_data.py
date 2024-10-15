@@ -21,17 +21,17 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException,
 # Start Helper Functions
 def setup_driver(user_agent=None):
     chrome_options = Options()
-    # chrome_options.add_argument("--headless")  # Run in headless mode
-    # chrome_options.add_argument("--no-sandbox")  # Required for headless mode on some systems
-    # chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
-    # chrome_options.add_argument("--disable-gpu")  # Disable GPU hardware acceleration
-    # chrome_options.add_argument("--disable-extensions")  # Disable extensions for performance
-    # chrome_options.add_argument("--disable-popup-blocking")  # Disable popup blocking
-    # chrome_options.add_argument("--disable-notifications")  # Disable notifications
-    # chrome_options.add_argument("--disable-infobars")  # Disable infobars
-    # chrome_options.add_argument("--disable-blink-features=AutomationControlled")  # Disable automation controlled
-    # chrome_options.add_argument("--disable-web-security")  # Disable web security
-    # chrome_options.add_argument("--disable-features=IsolateOrigins,site-per-process")  # Disable isolate origins and site per process
+    chrome_options.add_argument("--headless")  # Run in headless mode
+    chrome_options.add_argument("--no-sandbox")  # Required for headless mode on some systems
+    chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
+    chrome_options.add_argument("--disable-gpu")  # Disable GPU hardware acceleration
+    chrome_options.add_argument("--disable-extensions")  # Disable extensions for performance
+    chrome_options.add_argument("--disable-popup-blocking")  # Disable popup blocking
+    chrome_options.add_argument("--disable-notifications")  # Disable notifications
+    chrome_options.add_argument("--disable-infobars")  # Disable infobars
+    chrome_options.add_argument("--disable-blink-features=AutomationControlled")  # Disable automation controlled
+    chrome_options.add_argument("--disable-web-security")  # Disable web security
+    chrome_options.add_argument("--disable-features=IsolateOrigins,site-per-process")  # Disable isolate origins and site per process
 
     if user_agent:
         chrome_options.add_argument(f"user-agent={user_agent}")
