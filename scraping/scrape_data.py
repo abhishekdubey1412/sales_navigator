@@ -18,23 +18,20 @@ from selenium.webdriver.support import expected_conditions as EC
 from .models import ScrapingInfo, LinkedInProfile, LinkedInCompany
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementClickInterceptedException
 
-# Start Helper Functionsfrom selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium import webdriver
-
+# Start Helper Functions
 def setup_driver(user_agent=None):
     chrome_options = Options()
-    chrome_options.add_argument("--headless")  # Run in headless mode
-    chrome_options.add_argument("--no-sandbox")  # Required for headless mode on some systems
-    chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
-    chrome_options.add_argument("--disable-gpu")  # Disable GPU hardware acceleration
-    chrome_options.add_argument("--disable-extensions")  # Disable extensions for performance
-    chrome_options.add_argument("--disable-popup-blocking")  # Disable popup blocking
-    chrome_options.add_argument("--disable-notifications")  # Disable notifications
-    chrome_options.add_argument("--disable-infobars")  # Disable infobars
-    chrome_options.add_argument("--disable-blink-features=AutomationControlled")  # Disable automation controlled
-    chrome_options.add_argument("--disable-web-security")  # Disable web security
-    chrome_options.add_argument("--disable-features=IsolateOrigins,site-per-process")  # Disable isolate origins and site per process
+    # chrome_options.add_argument("--headless")  # Run in headless mode
+    # chrome_options.add_argument("--no-sandbox")  # Required for headless mode on some systems
+    # chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
+    # chrome_options.add_argument("--disable-gpu")  # Disable GPU hardware acceleration
+    # chrome_options.add_argument("--disable-extensions")  # Disable extensions for performance
+    # chrome_options.add_argument("--disable-popup-blocking")  # Disable popup blocking
+    # chrome_options.add_argument("--disable-notifications")  # Disable notifications
+    # chrome_options.add_argument("--disable-infobars")  # Disable infobars
+    # chrome_options.add_argument("--disable-blink-features=AutomationControlled")  # Disable automation controlled
+    # chrome_options.add_argument("--disable-web-security")  # Disable web security
+    # chrome_options.add_argument("--disable-features=IsolateOrigins,site-per-process")  # Disable isolate origins and site per process
 
     if user_agent:
         chrome_options.add_argument(f"user-agent={user_agent}")
@@ -181,6 +178,13 @@ def initialize_scraping(user_agent, li_at_value, scraping_info_id, request, acti
     request.user.save()
 
     return driver, wait, logged_in
+
+def extract_duration(duration_str):
+    years_pattern = re.search(r'(\d+)\s*yrs?', duration_str)
+    months_pattern = re.search(r'(\d+)\s*mos?', duration_str)
+    years = int(years_pattern.group(1)) if years_pattern else 0
+    months = int(months_pattern.group(1)) if months_pattern else 0
+    return [years, months]
 # End Helper Functions
 
 
@@ -751,229 +755,108 @@ def company_deep_scrape_and_save_data(url, li_at_value, scraping_info_id, user_a
 
 
 # Start People + Deep
-class LinkedInScraper:
-    def __init__(self, driver):
-        self.driver = driver
-        self.wait = WebDriverWait(driver, 20)
-
-    def extract_duration(self, duration_str):
-        years_pattern = re.search(r'(\d+)\s*yrs?', duration_str)
-        months_pattern = re.search(r'(\d+)\s*mos?', duration_str)
-        years = int(years_pattern.group(1)) if years_pattern else 0
-        months = int(months_pattern.group(1)) if months_pattern else 0
-        return [years, months]
-    
-    def get_headline(self):
-        try:
-            headline_element = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'span[data-anonymize="headline"]')))
-            return headline_element.text
-        except:
-            return "None"
-
-    def get_connections(self):
-        try:
-            connections_element = self.driver.find_element(By.CLASS_NAME, '_header_sqh8tm')
-            match = re.search(r'(\d+\+?)\s+connections', connections_element.text)
-            return match.group(0) if match else 0
-        except:
-            return 0
-
-    def click_button_and_get_profile_link(self):
-        try:
-            button_element = self.driver.find_element(By.CLASS_NAME, '_overflow-menu--trigger_1xow7n')
-            self.driver.execute_script("arguments[0].click();", button_element)
-            profile_link = self.wait.until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, 'a.ember-view._item_1xnv7i[href*="linkedin.com"]'))
-            ).get_attribute('href')
-            self.driver.find_element(By.CSS_SELECTOR, '[data-sn-view-name="lead-current-role"]').click()
-            return profile_link
-        except (NoSuchElementException, ElementClickInterceptedException, TimeoutException):
-            return "None"
-
-    def get_about_section(self):
-        try:
-            self.driver.find_element(By.CLASS_NAME, '_content-width_1dtbsb._bodyText_1e5nen._default_1i6ulk._sizeSmall_1e5nen').click()
-        except:
-            pass
-
-        try:
-            about_section = self.driver.find_element(By.CSS_SELECTOR, '[data-anonymize="person-blurb"]')
-            prospect_summary_element = about_section.text
-            return prospect_summary_element
-        except:
-            return "None"
-
-    def prospect_current_positions(self):
-        try:
-            expriance_section = self.driver.find_element(By.ID, 'experience-section')
-            present_elements = expriance_section.find_elements(By.CLASS_NAME, '_bodyText_1e5nen._default_1i6ulk._sizeXSmall_1e5nen._lowEmphasis_1i6ulk')
-            return sum(1 for present in present_elements if 'present' in present.text.lower())
-        except:
-            return 0
-
-    def years_and_months_in_position(self):
-        try:
-            expriance_section = self.wait.until(EC.presence_of_element_located((By.ID, 'experience-section')))
-            present_elements = expriance_section.find_element(By.CSS_SELECTOR, 'p._bodyText_1e5nen._default_1i6ulk._sizeXSmall_1e5nen._lowEmphasis_1i6ulk')
-            return self.extract_duration(present_elements.text)
-        except:
-            return [0, 0]
-        
-    def years_and_months_in_company(self):
-        try:
-            expriance_section = self.wait.until(EC.presence_of_element_located((By.ID, 'experience-section')))
-            present_elements = expriance_section.find_element(By.TAG_NAME, 'ul').find_element(By.TAG_NAME, 'li').find_elements(By.TAG_NAME, 'p')
-            return self.extract_duration(present_elements[1].text)
-        except:
-            return [0, 0]
-
-    def get_company_details(self):
-        extracted_data = {
-            "company_profile_picture": "None",
-            "company_website": "None",
-            "company_domain": "None",
-            "overview": "None",
-            "industry": "None",
-            "specialties": "None",
-            "company_employee_count": "None",
-            "company_employee_range": "None",
-            "company_location": "None",
-            "company_year_founded": "None",
-            "phone": "None"
-        }
-
-        try:
-            # Extract the company profile picture
-            try:
-                profile_picture_element = self.wait.until(
-                    EC.presence_of_element_located((By.CLASS_NAME, 'org-top-card-primary-content__logo-container')
-                )).find_element(By.TAG_NAME, 'img')
-                # profile_picture_element = self.driver.find_element(By.CLASS_NAME, 'org-top-card-primary-content__logo-container')
-                extracted_data["company_profile_picture"] = profile_picture_element.get_attribute('src')
-            except Exception as e:
-                print(f"Error extracting profile picture: {e}")
-
-            # Extract the company website and domain
-            try:
-                website_element = self.driver.find_element(By.TAG_NAME, 'dl').find_element(By.TAG_NAME, 'a')
-                extracted_data["company_website"] = website_element.get_attribute('href')
-                if extracted_data["company_website"] != "None":
-                    extracted_data["company_domain"] = extracted_data["company_website"].split('//', 1)[1]
-            except Exception as e:
-                print(f"Error extracting website: {e}")
-
-            # Extract the company overview and other details
-            data = self.driver.find_element(By.CLASS_NAME, "org-grid__content-height-enforcer").text
-            overview_pattern = r'Overview\n(.*?)\n(?=Website|Phone|Verified page|Industry|Company size|$)'
-            overview_match = re.search(overview_pattern, data, re.DOTALL)
-            extracted_data["overview"] = overview_match.group(1).strip() if overview_match else "None"
-
-            patterns = {
-                "phone": r"Phone\n(.*?)\n",
-                "industry": r"Industry\n(.*?)\n",
-                "specialties": r"Specialties\n(.*?)\n",
-                "company_employee_count": r"(\d+,?\d*) associated members",
-                "company_employee_range": r"Company size\n(.*?) employees",
-                "company_location": r"Headquarters\n(.*?)\n",
-                "company_year_founded": r"Founded\n(\d+)",
-            }
-
-            for key, pattern in patterns.items():
-                match = re.search(pattern, data)
-                extracted_data[key] = match.group(1).strip() if match else "None"
-
-        except Exception as e:
-            pass
-
-        return extracted_data
-
-def extract_profile_deep_data(result, driver, wait):
+def extract_profile_deep_data(driver, wait):
     data = {}
+    def safe_find_element_by_css_selector(selector):
+        try:
+            return wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector))).text
+        except:
+            return "None"
     try:
-        a_tag = result.find_element(By.CLASS_NAME, 'artdeco-entity-lockup__title.ember-view').find_element(By.TAG_NAME, 'a')
-        data['prospect_sales_navigator_url'] = a_tag.get_attribute('href')
-        person_full_name = a_tag.text
-        data['full_name'] = person_full_name
-        data['first_name'], data['last_name'] = person_full_name.split(' ', 1)
+        data['person_full_name'] = safe_find_element_by_css_selector("#profile-card-section [data-anonymize='person-name']")
+        data['person_first_name'] = data['person_full_name'].split(' ')[0]
+        data['person_last_name'] = data['person_full_name'].split(' ')[1]
+    except:
+        data['person_first_name'] = "None"
+        data['person_last_name'] = "None"
+    
+    data['connections_degree'] = safe_find_element_by_css_selector('#profile-card-section > section:first-of-type > div:first-of-type > div:nth-of-type(2) > span')
+    
+    try:
+        prospect_is_premium_element = driver.find_element(By.CSS_SELECTOR, '[aria-label="Premium Member"]')
+        data['prospect_is_premium'] = True if prospect_is_premium_element else False
+    except:
+        data['prospect_is_premium'] = False
+    
+    data['prospect_headline'] = safe_find_element_by_css_selector('#profile-card-section [data-anonymize="headline"]')
+    data['prospect_location'] = safe_find_element_by_css_selector('#profile-card-section > section:first-of-type > div:first-of-type > div:nth-of-type(4) > div:first-of-type')
+    data['prospect_connections'] = safe_find_element_by_css_selector('#profile-card-section > section:first-of-type > div:first-of-type > div:nth-of-type(4) > div:nth-of-type(2)')
+    
+    try:
+        prospect_linkedin_url_element = driver.find_element(By.CSS_SELECTOR, '[aria-label="Open actions overflow menu"]')
+        prospect_linkedin_url_element.click()
+        prospect_linkedin_url = driver.find_element(By.CSS_SELECTOR, '#hue-web-menu-outlet div:nth-child(2) ul li:nth-last-child(2)')
+        data['prospect_linkedin_url'] = prospect_linkedin_url.get_attribute('href')
+    except:
+        data['prospect_linkedin_url'] = "None"
+    
+    try:
+        prospect_address_element = driver.find_element(By.TAG_NAME, 'address').text
 
-        # Extract company data
+        contact_number_match = re.search(r'\b\d{10}\b', prospect_address_element)
+        data['prospect_phone_no'] = contact_number_match.group() if contact_number_match else "None"
+
+        gmail_match = re.search(r'\b[A-Za-z0-9._%+-]+@gmail\.com\b', prospect_address_element)
+        data['prospect_email_address'] = gmail_match.group() if gmail_match else "None"
+    except:
+        data['prospect_phone_no'] = "None"
+        data['prospect_email_address'] = "None"
+    
+    try:
+        prospect_summary_element = driver.find_element(By.XPATH, '//*[@id="about-section"]//*[@data-anonymize="person-blurb"]')
+        data['prospect_summary'] = prospect_summary_element.text.replace("… Show more", "")
+    except:
+        data['prospect_summary'] = "None"
+
+    try:
+        prospect_profile_picture_element = driver.find_element(By.XPATH, '//*[@data-anonymize="headshot-photo"]')
+        data['prospect_profile_picture'] = prospect_profile_picture_element.get_attribute('src')
+    except:
+        data['prospect_profile_picture'] = "None"
+
+    try:
+        data['years_in_position'], data['months_in_position'] = extract_duration(
+            wait.until(EC.presence_of_element_located((By.ID, 'experience-section')))
+            .find_element(By.CSS_SELECTOR, '#scroll-to-experience-section > div > ul > li:nth-child(1) > ul > li:nth-child(1) > div > p:nth-child(2)').text
+        )
+    except:
+        data['years_in_position'] = 0
+        data['months_in_position'] = 0
+
+    try:
+        data['years_in_company'], data['months_in_company'] = extract_duration(
+            wait.until(EC.presence_of_element_located((By.ID, 'experience-section')))
+            .find_element(By.TAG_NAME, 'ul').find_element(By.TAG_NAME, 'li').find_elements(By.TAG_NAME, 'p')[1].text
+        )
+    except:
+        data['years_in_company'] = 0
+        data['months_in_company'] = 0
+
+    try:
+        expriance_section = driver.find_element(By.ID, 'experience-section')
+
         try:
-            company_name_element = result.find_element(By.CLASS_NAME, 'ember-view.t-black--light.t-bold.inline-block')
-            data['company_name'] = company_name_element.text
-            company_sales_link = company_name_element.get_attribute('href')
-            data['company_id'] = re.search(r"/company/(\d+)", company_sales_link).group(1)
-            data['company_url'] = f"https://www.linkedin.com/sales/company/{data['company_id']}"
-            data['regular_company_url'] = f"https://www.linkedin.com/company/{data['company_id']}"
+            experience_section_button = driver.find_element(By.ID, 'scroll-to-experience-section').find_element(By.TAG_NAME, 'button')
+            experience_section_button.click()
         except:
-            data['company_name'] = "None"
-            data['company_id'] = "None"
-            data['company_url'] = "None"
-            data['regular_company_url'] = "None"
+            pass
 
-        data['profile_image_url'] = "None"
-        try:
-            profile_image_element = result.find_element(By.TAG_NAME, 'img')
-            data['profile_image_url'] = profile_image_element.get_attribute('src')
-        except:
-            data['profile_image_url'] = "None"
-
-        data['prospect_position'] = "None"
-        try:
-            prospect_position_element = result.find_element(By.CLASS_NAME, 'artdeco-entity-lockup__subtitle.ember-view.t-14').find_element(By.XPATH, ".//span[@data-anonymize='title']")
-            data['prospect_position'] = prospect_position_element.text
+        try:    
+            data['prospect_position'] = expriance_section.find_element(By.CSS_SELECTOR, '[data-anonymize="job-title"]').text
+            data['regular_company_url'] = expriance_section.find_element(By.CSS_SELECTOR, 'ul > li:first-child > div:first-child > div:first-child > a').get_attribute('href')
         except:
             data['prospect_position'] = "None"
-
-        data['prospect_is_premium'] = False
+            data['regular_company_url'] = "None"
+            
         try:
-            prospect_is_premium_element = result.find_element(By.XPATH, ".//li-icon[@type='linkedin-premium-gold-icon']")
-            data['prospect_is_premium'] = True if prospect_is_premium_element else False
+            present_elements = expriance_section.find_elements(By.CSS_SELECTOR, 'div > ul > li')
+            data['prospect_current_positions'] = sum(1 for present in present_elements if '–present' in present.text.lower())
         except:
-            data['prospect_is_premium'] = False
-
-        data['location'] = "None"
-        try:
-            location_element = result.find_element(By.CLASS_NAME, 'artdeco-entity-lockup__caption.ember-view')
-            data['location'] = location_element.text
-        except:
-            data['location'] = "None"
-    except Exception as e:
-        logging.error("Error extracting data from result: %s", e)
+            data['prospect_current_positions'] = 0
+    except:
+        data['prospect_current_positions'] = 0  
+    
     return data
-
-def scrape_profile_data(driver):
-    # Initialize the LinkedInScraper with the Selenium driver
-    scraper = LinkedInScraper(driver)
-    
-    # Extract data from the LinkedIn profile
-    extract_data = {}
-    extract_data['prospect_headline'] = scraper.get_headline()
-    extract_data['prospect_connections'] = scraper.get_connections()
-    
-    # Get the profile link and other sections
-    extract_data['prospect_linkedin_url'] = scraper.click_button_and_get_profile_link()
-    extract_data['prospect_summary'] = scraper.get_about_section()
-    
-    # Extract years and months in company
-    years_and_months_in_company = scraper.years_and_months_in_company()
-    extract_data['years_in_company'] = years_and_months_in_company[0]
-    extract_data['months_in_company'] = years_and_months_in_company[1]
-    
-    # Extract years and months in position
-    years_and_months_in_position = scraper.years_and_months_in_position()
-    extract_data['years_in_position'] = years_and_months_in_position[0]  # Fixed: Changed from years_and_months_in_company to years_and_months_in_position
-    extract_data['months_in_position'] = years_and_months_in_position[1]  # Fixed: Changed from years_and_months_in_company to years_and_months_in_position
-    
-    # Extract current positions
-    extract_data['prospect_current_positions'] = scraper.prospect_current_positions()
-    
-    return extract_data
-
-def scrape_company_data(driver):
-    # Initialize the LinkedInScraper with the Selenium driver
-    scraper = LinkedInScraper(driver)
-
-    return scraper.get_company_details()
 
 def profile_deep_scrape_and_save_data(url, li_at_value, scraping_info_id, user_agent, request, active_package):
     driver, wait, logged_in = initialize_scraping(user_agent, li_at_value, scraping_info_id, request, active_package)
@@ -986,69 +869,56 @@ def profile_deep_scrape_and_save_data(url, li_at_value, scraping_info_id, user_a
                 collapse_button.click()
             except Exception as e:
                 logging.error("Error collapsing filter panel: %s", e)
+            
             while True:
                 search_results_container = wait.until(EC.presence_of_element_located((By.ID, 'search-results-container'))).find_element(By.XPATH, 'div[2]/ol')
                 scroll_down(search_results_container, driver, wait)
 
                 search_results = search_results_container.find_elements(By.TAG_NAME, 'li')
-                for result in search_results:
-                    try:
-                        found = result.find_element(By.CSS_SELECTOR, '[data-view-name="search-results-entity"]')
-                        found = True
-                    except:
-                        found =  False
-                    
-                    if found:
-                        data = extract_profile_deep_data(result, driver, wait)
-                        if data:
-                            open_new_tab(driver, data['prospect_sales_navigator_url'])
-                            profile_data = scrape_profile_data(driver)
-                            close_current_tab(driver)
-                            data.update(profile_data)
+                found_elements = [result for result in search_results if result.find_elements(By.CSS_SELECTOR, '[data-view-name="search-results-entity"]')]
+                for result in found_elements:
+                    prospect_sales_navigator_url = result.find_element(By.CSS_SELECTOR, '[data-view-name="search-results-lead-name"]').get_attribute('href')
+                    open_new_tab(driver, prospect_sales_navigator_url)
+                    data = extract_profile_deep_data(driver, wait)
+                    close_current_tab(driver)
 
-                            if data['regular_company_url'] != "None":
-                                open_new_tab(driver, data['regular_company_url'] + '/about/')
-                                company_data = scrape_company_data(driver)
-                                close_current_tab(driver)
-                                data.update(company_data)
-                            else:
-                                company_data = {
-                                    "company_profile_picture": "None",
-                                    "company_website": "None",
-                                    "company_domain": "None",
-                                    "overview": "None",
-                                    "industry": "None",
-                                    "specialties": "None",
-                                    "company_employee_count": "None",
-                                    "company_employee_range": "None",
-                                    "company_location": "None",
-                                    "company_year_founded": "None",
-                                    "phone": "None"
-                                }
-                                data.update(company_data)
+                    if data['regular_company_url'] != "None":
+                        open_new_tab(driver, data['regular_company_url'])
+                        company_data = extract_company_deep_data(driver, wait, is_csv=True)
+                        close_current_tab(driver)
+                    else:
+                        company_data_keys = ["company_name", "description", "industry", "employee_count", "location", "country", "geographic_area", 
+                         "city", "postal_code", "address", "headquarters", "company_id", "linkedin_company_url", 
+                         "sales_navigator_company_url", "website", "domain", "decision_makers_search_url", "employee_search_url", 
+                         "decision_makers_count", "logo_url", "founded_year", "phone", "min_revenue", "max_revenue", "specialties", 
+                         "company_type"]
+                        company_data = {key: "None" for key in company_data_keys}
 
-                            LinkedInProfile.objects.create(
-                                query=url, sales_navigator_url=data['prospect_sales_navigator_url'], full_name=data['full_name'], first_name=data['first_name'], last_name=data['last_name'],       
-                                profile_picture=data['profile_image_url'], job_title=data['prospect_position'], is_premium=data['prospect_is_premium'], location=data['location'],
-                                headline=data['prospect_headline'], connections=data['prospect_connections'], linkedin_url=data['prospect_linkedin_url'], summary=data['prospect_summary'], 
-                                years_in_company=data['years_in_company'], months_in_company=data['months_in_company'], years_in_position=data['years_in_position'], months_in_position=data['months_in_position'],
-                                current_positions=data['prospect_current_positions'], scraping_id = ScrapingInfo.objects.get(id=scraping_info_id).scraping_id
-                            )
+                    LinkedInProfile.objects.create(
+                        query=url, sales_navigator_url=prospect_sales_navigator_url, full_name=data['person_full_name'], first_name=data['person_first_name'], last_name=data['person_last_name'],       
+                        profile_picture=data['prospect_profile_picture'], job_title=data['prospect_position'], is_premium=data['prospect_is_premium'], location=data['prospect_location'],
+                        headline=data['prospect_headline'], connections=data['connections_degree'], linkedin_url=data['prospect_linkedin_url'], summary=data['prospect_summary'], 
+                        years_in_company=data['years_in_company'], months_in_company=data['months_in_company'], years_in_position=data['years_in_position'], months_in_position=data['months_in_position'],
+                        current_positions=data['prospect_current_positions'], scraping_id = ScrapingInfo.objects.get(id=scraping_info_id).scraping_id
+                    )
 
-                            LinkedInCompany.objects.create(
-                                company_name=data['company_name'], scraping_id = ScrapingInfo.objects.get(id=scraping_info_id).scraping_id, query=url,
-                                company_linkedin_id_url=data['company_url'], company_website=data['company_website'], company_domain=data['company_domain'], 
-                                company_industry=data['industry'], company_specialties=data['specialties'], company_employee_count=data['company_employee_count'], 
-                                company_employee_range=data['company_employee_range'], company_location=data['company_location'], company_year_founded=data['company_year_founded'], 
-                                company_description=data['overview'],company_profile_picture=data['company_profile_picture'], company_number=data['phone'],   
-                            )
+                    LinkedInCompany.objects.create(
+                        query=url, company_name=company_data['company_name'], company_description=company_data['description'], company_industry=company_data['industry'], 
+                        company_employee_count=company_data['employee_count'], company_location=company_data['location'], country=company_data['country'],
+                        geographicArea=company_data['geographic_area'], city=company_data['city'], postal_code=company_data['postal_code'], address=company_data['address'],
+                        company_headquarters=company_data['headquarters'], company_id=company_data['company_id'], regular_company_url=company_data['linkedin_company_url'],
+                        sales_navigator_company_url=company_data['sales_navigator_company_url'], company_website=company_data['website'], company_domain=company_data['domain'],
+                        decision_makers_search_url=company_data['decision_makers_search_url'], employee_search_url=company_data['employee_search_url'],
+                        decision_makers_count=company_data['decision_makers_count'], company_profile_picture=company_data['logo_url'],
+                        company_year_founded=company_data['founded_year'], company_number=company_data['phone'], company_revenue_min=company_data['min_revenue'],
+                        company_revenue_max=company_data['max_revenue'], company_specialties=company_data['specialties'], company_type=company_data['company_type'],
+                        scraping_id=ScrapingInfo.objects.get(id=scraping_info_id).scraping_id,
+                    )
 
                 if next_page(driver):
                     break
-
         except:
             update_scraping_info(driver, scraping_info_id, status='completed', active_package=active_package)
-
         update_scraping_info(driver, scraping_info_id, status='completed', active_package=active_package)
     else:
         update_scraping_info(driver, scraping_info_id, status='failed', active_package=active_package)
@@ -1057,7 +927,58 @@ def profile_deep_scrape_and_save_data(url, li_at_value, scraping_info_id, user_a
 
 # Start PDeepCSV
 def profile_deep_scrape_and_save_data_csv(csv_file, li_at_value, scraping_info_id, user_agent, request, active_package):
-    pass
+    with open(csv_file.path, 'r') as file:
+        links = file.read().splitlines()
+
+    if not links:
+        update_scraping_info(driver, scraping_info_id, status='completed', active_package=active_package)
+    driver, wait, logged_in = initialize_scraping(user_agent, li_at_value, scraping_info_id, request, active_package)
+
+    if logged_in:
+        for url in links:
+            driver.get(url)
+            try:
+                data = extract_profile_deep_data(driver, wait)
+                if data['regular_company_url'] != "None":
+                        open_new_tab(driver, data['regular_company_url'])
+                        company_data = extract_company_deep_data(driver, wait, is_csv=True)
+                        close_current_tab(driver)
+                else:
+                    company_data_keys = ["company_name", "description", "industry", "employee_count", "location", "country", "geographic_area", 
+                        "city", "postal_code", "address", "headquarters", "company_id", "linkedin_company_url", 
+                        "sales_navigator_company_url", "website", "domain", "decision_makers_search_url", "employee_search_url", 
+                        "decision_makers_count", "logo_url", "founded_year", "phone", "min_revenue", "max_revenue", "specialties", 
+                        "company_type"]
+                    company_data = {key: "None" for key in company_data_keys}
+
+                LinkedInProfile.objects.create(
+                    query=url, sales_navigator_url=url, full_name=data['person_full_name'], first_name=data['person_first_name'], last_name=data['person_last_name'],       
+                    profile_picture=data['prospect_profile_picture'], job_title=data['prospect_position'], is_premium=data['prospect_is_premium'], location=data['prospect_location'],
+                    headline=data['prospect_headline'], connections=data['connections_degree'], linkedin_url=data['prospect_linkedin_url'], summary=data['prospect_summary'], 
+                    years_in_company=data['years_in_company'], months_in_company=data['months_in_company'], years_in_position=data['years_in_position'], months_in_position=data['months_in_position'],
+                    current_positions=data['prospect_current_positions'], scraping_id = ScrapingInfo.objects.get(id=scraping_info_id).scraping_id
+                )
+
+                LinkedInCompany.objects.create(
+                    query=url, company_name=company_data['company_name'], company_description=company_data['description'], company_industry=company_data['industry'], 
+                    company_employee_count=company_data['employee_count'], company_location=company_data['location'], country=company_data['country'],
+                    geographicArea=company_data['geographic_area'], city=company_data['city'], postal_code=company_data['postal_code'], address=company_data['address'],
+                    company_headquarters=company_data['headquarters'], company_id=company_data['company_id'], regular_company_url=company_data['linkedin_company_url'],
+                    sales_navigator_company_url=company_data['sales_navigator_company_url'], company_website=company_data['website'], company_domain=company_data['domain'],
+                    decision_makers_search_url=company_data['decision_makers_search_url'], employee_search_url=company_data['employee_search_url'],
+                    decision_makers_count=company_data['decision_makers_count'], company_profile_picture=company_data['logo_url'],
+                    company_year_founded=company_data['founded_year'], company_number=company_data['phone'], company_revenue_min=company_data['min_revenue'],
+                    company_revenue_max=company_data['max_revenue'], company_specialties=company_data['specialties'], company_type=company_data['company_type'],
+                    scraping_id=ScrapingInfo.objects.get(id=scraping_info_id).scraping_id,
+                )
+            except:
+                pass
+        if links:
+            update_scraping_info(driver, scraping_info_id, status='completed', active_package=active_package)
+        else:
+            update_scraping_info(driver, scraping_info_id, status='completed', active_package=active_package)
+    else:
+        update_scraping_info(driver, scraping_info_id, status='failed', active_package=active_package)
 # End PDeepCSV
 
 # Start CDeepCSV

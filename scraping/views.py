@@ -386,9 +386,11 @@ def export_csv(request, scraping_id):
             'Query', 'Sales Navigator URL', 'Full Name', 'First Name', 'Last Name', 'Profile Picture', 'Job Title', 
             'Is Premium', 'Location', 'Headline', 'Connections', 'LinkedIn URL', 'Summary', 'Years in Company', 
             'Months in Company', 'Years in Position', 'Months in Position', 'Current Positions', 'Company Name', 
-            'Company LinkedIn ID URL', 'Company Website', 'Company Domain', 'Company Industry', 'Company Specialties', 
-            'Company Employee Count', 'Company Employee Range', 'Company Location', 'Company Year Founded', 
-            'Company Description', 'Company Profile Picture', 'Company Number'
+            'Company ID', 'Company Website', 'Company Domain', 'Company Industry', 'Company Specialties', 
+            'Company Employee Count', 'Company Location', 'Company Year Founded', 'Company Description', 
+            'Company Profile Picture', 'Company Number', 'Company Revenue Min', 'Company Revenue Max', 
+            'Company Headquarters', 'City', 'Geographic Area', 'Country', 'Address', 'Postal Code', 
+            'Decision Makers Search URL', 'Employee Search URL', 'Decision Makers Count'
         ])
         
         for i, profile in enumerate(profiles):
@@ -400,12 +402,17 @@ def export_csv(request, scraping_id):
                 profile.profile_picture, profile.job_title, profile.is_premium, profile.location, profile.headline, 
                 profile.connections, profile.linkedin_url, profile.summary, profile.years_in_company, profile.months_in_company, 
                 profile.years_in_position, profile.months_in_position, profile.current_positions, company.company_name if company else '', 
-                company.company_linkedin_id_url if company else '', company.company_website if company else '', 
+                company.company_id if company else '', company.company_website if company else '', 
                 company.company_domain if company else '', company.company_industry if company else '', 
                 company.company_specialties if company else '', company.company_employee_count if company else '', 
-                company.company_employee_range if company else '', company.company_location if company else '', 
-                company.company_year_founded if company else '', company.company_description if company else '', 
-                company.company_profile_picture if company else '', company.company_number if company else ''
+                company.company_location if company else '', company.company_year_founded if company else '', 
+                company.company_description if company else '', company.company_profile_picture if company else '', 
+                company.company_number if company else '', company.company_revenue_min if company else '', 
+                company.company_revenue_max if company else '', company.company_headquarters if company else '', 
+                company.city if company else '', company.geographicArea if company else '', company.country if company else '', 
+                company.address if company else '', company.postal_code if company else '', 
+                company.decision_makers_search_url if company else '', company.employee_search_url if company else '', 
+                company.decision_makers_count if company else ''
             ])   
     elif scraping_info.input_type == "CNormal":
         writer.writerow([
