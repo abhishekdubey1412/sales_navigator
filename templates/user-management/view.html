@@ -12,9 +12,10 @@
                 <!--begin::Page title-->
                 <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3 ">
                     <!--begin::Title-->
-                    <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">
-                        View Role Details
-                    </h1>
+                    <a href="{% url "roles" %}" class="page-heading text-primary d-flex fs-5 align-items-center my-0">
+                        <i class="ki-duotone ki-black-left fs-2 me-2 text-primary"></i>
+                        Back to Roles
+                    </a>
                     <!--end::Title-->
                 </div>
                 <!--end::Page title-->
@@ -139,17 +140,15 @@
                                             <td class="d-flex align-items-center">
                                                 <!--begin:: Avatar -->
                                                 <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                                                    <a href="/keen/demo1/apps/user-management/users/view.html">
-                                                        <div class="symbol-label">
-                                                            <img src="{{user_info.profile_image.url}}" alt="Emma Smith" class="w-100" />
-                                                        </div>
-                                                    </a>
+                                                    <div class="symbol-label">
+                                                        <img src="{{user_info.profile_image.url}}" alt="Emma Smith" class="w-100" />
+                                                    </div>
                                                 </div>
                                                 <!--end::Avatar-->
 
                                                 <!--begin::User details-->
                                                 <div class="d-flex flex-column">
-                                                    <a href="/keen/demo1/apps/user-management/users/view.html" class="text-gray-800 text-hover-primary mb-1">{{user_info.first_name}} {{user_info.last_name}}</a>
+                                                    <p class="text-gray-800 text-hover-primary mb-1">{{user_info.first_name}} {{user_info.last_name}}</p>
                                                     <span>{{user_info.email}}</span>
                                                 </div>
                                                 <!--begin::User details-->
@@ -260,8 +259,8 @@
         <div class="app-container  container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3 ">
             <!--begin::Copyright-->
             <div class="text-gray-900 order-2 order-md-1">
-                <span class="text-muted fw-semibold me-1">2024&copy;</span>
-                <a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Keenthemes</a>
+                <span class="text-muted fw-semibold me-1">2024©</span>
+                <a href="/" class="text-gray-800 text-hover-primary">Makesures</a>
             </div>
             <!--end::Copyright-->
 
@@ -270,12 +269,9 @@
                 <li class="menu-item"><a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
                 </li>
 
-                <li class="menu-item"><a href="https://devs.keenthemes.com" target="_blank"
-                        class="menu-link px-2">Support</a></li>
+                <li class="menu-item"><a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Support</a></li>
 
-                <li class="menu-item"><a
-                        href="https://themes.getbootstrap.com/product/keen-the-ultimate-bootstrap-admin-theme/"
-                        target="_blank" class="menu-link px-2">Purchase</a></li>
+                <li class="menu-item"><a href="https://themes.getbootstrap.com/product/keen-the-ultimate-bootstrap-admin-theme/" target="_blank" class="menu-link px-2">Purchase</a></li>
             </ul>
             <!--end::Menu-->
         </div>

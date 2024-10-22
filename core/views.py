@@ -44,7 +44,7 @@ def contact(request):
 
 
         context ={
-            "website_logo": WebsiteDetails.objects.first().small_light_logo,
+            "website_logo": WebsiteDetails.objects.first().small_light_logo.url,
             "thank_you_image": request.build_absolute_uri("/static/assets/media/email/icon-positive-vote-1.svg"),
             "website_name": WebsiteDetails.objects.first().website_name,
             "website_url": request.build_absolute_uri("/"),
@@ -55,7 +55,7 @@ def contact(request):
         mail_thread.start()
 
         context ={
-            "website_logo": WebsiteDetails.objects.first().small_light_logo,
+            "website_logo": WebsiteDetails.objects.first().small_light_logo.url,
             "thank_you_image": request.build_absolute_uri("/static/assets/media/email/icon-positive-vote-1.svg"),
             "website_name": WebsiteDetails.objects.first().website_name,
             "website_url": request.build_absolute_uri("/"),

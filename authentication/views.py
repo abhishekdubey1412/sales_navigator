@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.contrib import messages
 from users.models import UserProfile
 from django.http import JsonResponse
+from core.models import WebsiteDetails
 from sales_navigator.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password
@@ -58,7 +59,7 @@ def sign_up(request):
             otp = generate_otp()
             request.session['otp'] = otp
             try:
-                send_mail(subject='Your OTP Code', to_email=email, context={'username': email, 'otp': otp}, mail_type="otp-email")
+                send_mail(subject='Your OTP Code', to_email=email, context={'username': email, 'otp': otp, "website_logo": WebsiteDetails.objects.first().small_light_logo, "thank_you_image": request.build_absolute_uri("/static/assets/media/email/icon-positive-vote-1.svg"), "website_name": WebsiteDetails.objects.first().website_name, "website_url": request.build_absolute_uri("/"),}, mail_type="otp-email")
                 return JsonResponse({'success': True, 'redirect_url': '/otp-verification/'})
             except Exception:
                 return JsonResponse({'success': False, 'message': 'Failed to send OTP. Please try again.'})
@@ -111,7 +112,7 @@ def resend_otp(request):
     otp = generate_otp()
     request.session['otp'] = otp
     try:
-        send_mail(subject='Your OTP Code', to_email=user_data['email'], context={'username': user_data['email'], 'otp': otp}, mail_type="otp-email")
+        send_mail(subject='Your OTP Code', to_email=user_data['email'], context={'username': user_data['email'], 'otp': otp, "website_logo": WebsiteDetails.objects.first().small_light_logo, "thank_you_image": request.build_absolute_uri("/static/assets/media/email/icon-positive-vote-1.svg"), "website_url": request.build_absolute_uri("/")}, mail_type="otp-email")
         messages.success(request, 'New OTP resent successfully.')
     except Exception:
         messages.error(request, 'Failed to resend OTP. Please try again.')
