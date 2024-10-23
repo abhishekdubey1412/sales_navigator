@@ -1,9 +1,17 @@
+from django.urls import reverse
 from django.contrib import admin
-from django.urls import path, include
 from django.conf import settings
+from django.shortcuts import redirect
+from django.urls import path, include
 from django.conf.urls.static import static
 
+def cancelled_login(request):
+    return redirect(reverse('sign_in'))
+
+
 urlpatterns = [
+    path('accounts/3rdparty/login/cancelled/', cancelled_login, name='cancelled_login'),
+
     # Admin URLs
     path('admin/', admin.site.urls),
     

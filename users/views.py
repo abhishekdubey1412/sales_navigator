@@ -1,3 +1,4 @@
+import re
 from .models import UserProfile
 from django.utils import timezone
 from django.contrib import messages
@@ -40,7 +41,10 @@ def update_profile(request):
             user.profile_image = request.FILES['avatar']
         user.first_name = request.POST.get('fname')
         user.last_name = request.POST.get('lname')
-        user.mobile_no = request.POST.get('phone')
+        phone = request.POST.get('phone')
+        phone = re.sub(r'^\+\d{1,3}\s*', '', phone)
+        phone = re.sub(r'^0', '', phone)
+        user.mobile_no = phone
         user.company_name = request.POST.get('company_name')
         user.tax_id = request.POST.get('TaxID')
         user.address = request.POST.get('address')

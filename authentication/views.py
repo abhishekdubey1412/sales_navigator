@@ -33,9 +33,18 @@ def sign_in(request):
 # Sign Out view
 @login_required(login_url='sign_in')
 def sign_out(request):
-    # Log out the user and redirect to the home page
+    # Log out the user
     logout(request)
-    return redirect('home')
+
+    # Clear cookies
+    response = redirect('/accounts/logout/')
+    for cookie in request.COOKIES.keys():
+        response.delete_cookie(cookie)
+
+    # Optionally, clear the session
+    request.session.flush()
+
+    return response
 
 # OTP Generator function
 def generate_otp():
@@ -135,7 +144,7 @@ def reset_password(request):
                 reset_link = request.build_absolute_uri(f'/new-password/?otp={otp}')
                 try:
                     send_mail(subject='Password Reset OTP', to_email=email, context={'otp': otp, 'reset_link': reset_link}, mail_type="reset-otp-email")
-                    return JsonResponse({'success': True, 'redirect_url': 'https://mail.google.com/mail/u/0/#inbox/'})
+                    return JsonResponse({'success': True, 'redirect_url': '/'})
                 except Exception:
                     return JsonResponse({'success': False, 'message': 'Failed to send OTP. Please try again.'})
             return JsonResponse({'success': False, 'message': 'User with provided email and phone does not exist.'})
